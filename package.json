@@ -1,0 +1,23 @@
+{
+  "name": "archify-bridge",
+  "version": "0.1.0",
+  "description": "Bridge between Archify JSON IR and draw.io, Lucidchart, Miro, and Mermaid",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "validate": "node src/utils/validator.js",
+    "export:mermaid": "node src/converters/to-mermaid.js"
+  },
+    "keywords": [
+    "archify",
+    "drawio",
+    "lucidchart",
+    "miro",
+    "mermaid",
+    "diagrams"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.12.0"
+  }
+}

@@ -1,0 +1,8 @@
+graph TD
+    browser["Browser"]
+    api["API Gateway"]
+    redis["Redis Cache"]
+    postgres["PostgreSQL"]
+    browser -->|HTTPS| api
+    api -->|cache lookup| redis
+    api -->|fallback| postgres

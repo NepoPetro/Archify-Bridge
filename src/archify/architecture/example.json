@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "title": "Example Architecture",
+    "type": "architecture",
+    "visual_preset": "signal-flow",
+    "locale": "en"
+  },
+  "nodes": [
+    { "id": "browser", "label": "Browser" },
+    { "id": "api", "label": "API Gateway" },
+    { "id": "redis", "label": "Redis Cache" },
+    { "id": "postgres", "label": "PostgreSQL" }
+  ],
+  "edges": [
+    { "source": "browser", "target": "api", "label": "HTTPS" },
+    { "source": "api", "target": "redis", "label": "cache lookup" },
+    { "source": "api", "target": "postgres", "label": "fallback" }
+  ]
+}
