@@ -1,19 +1,23 @@
-import { readFileSync, readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
-import Ajv from 'ajv';
+import { spawnSync } from 'child_process';
 
 const ROOT = resolve(process.cwd());
-const SCHEMA_PATH = join(ROOT, 'archify-schema.json');
 const SOURCE_DIR = join(ROOT, 'src', 'archify');
+const ARCHIFY_CLI = join(ROOT, 'vendor', 'archify', 'archify', 'bin', 'archify.mjs');
 
-const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf-8'));
-const ajv = new Ajv({ allErrors: true });
-const validate = ajv.compile(schema);
+const TYPE_MAP = {
+  architecture: 'architecture',
+  workflow: 'workflow',
+  sequence: 'sequence',
+  'data-flow': 'dataflow',
+  lifecycle: 'lifecycle'
+};
 
 function findJsonFiles(dir) {
   const results = [];
-  const entries = readdirSync(dir);
-  for (const entry of entries) {
+  if (!existsSync(dir)) return results;
+  for (const entry of readdirSync(dir)) {
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {
@@ -25,21 +29,48 @@ function findJsonFiles(dir) {
   return results;
 }
 
+function inferDiagramType(filePath) {
+  const parts = filePath.split(/[\\/]/);
+  const folder = parts[parts.length - 2];
+  return TYPE_MAP[folder] || null;
+}
+
 function validateFile(filePath) {
-  const content = JSON.parse(readFileSync(filePath, 'utf-8'));
-  const valid = validate(content);
-  if (!valid) {
-    console.error(`FAIL: ${filePath}`);
-    for (const err of validate.errors) {
-      console.error(`  - ${err.instancePath || '/'} ${err.message}`);
-    }
+  const type = inferDiagramType(filePath);
+  if (!type) {
+    console.error(`FAIL: ${filePath} (cannot infer diagram type from folder)`);
     return false;
   }
-  console.log(`OK:   ${filePath}`);
-  return true;
+
+  const result = spawnSync('node', [ARCHIFY_CLI, 'validate', type, filePath, '--json'], {
+    encoding: 'utf-8'
+  });
+
+  if (result.status === 0) {
+    console.log(`OK:   ${filePath}`);
+    return true;
+  }
+
+  console.error(`FAIL: ${filePath}`);
+  try {
+    const parsed = JSON.parse(result.stdout);
+    for (const diag of parsed.diagnostics || []) {
+      console.error(`  - [${diag.code}] ${diag.message}`);
+    }
+  } catch {
+    console.error(result.stdout);
+    console.error(result.stderr);
+  }
+  return false;
 }
 
 function main() {
+  if (!existsSync(ARCHIFY_CLI)) {
+    console.error(`Archify CLI not found at ${ARCHIFY_CLI}`);
+    console.error('Run: git submodule update --init --recursive');
+    process.exit(1);
+  }
+
   const files = findJsonFiles(SOURCE_DIR);
 
   if (files.length === 0) {

@@ -5,14 +5,6 @@ const ROOT = resolve(process.cwd());
 const SOURCE_DIR = join(ROOT, 'src', 'archify');
 const OUTPUT_DIR = join(ROOT, 'exports', 'mermaid');
 
-const MERMAID_HEADERS = {
-  architecture: 'graph TD',
-  workflow: 'graph TD',
-  sequence: 'sequenceDiagram',
-  'data-flow': 'graph LR',
-  lifecycle: 'stateDiagram-v2'
-};
-
 function findJsonFiles(dir) {
   const results = [];
   if (!existsSync(dir)) return results;
@@ -36,44 +28,26 @@ function escapeLabel(label) {
   return String(label).replace(/"/g, '\\"');
 }
 
-function convertGraph(content) {
-  const lines = [MERMAID_HEADERS[content.meta.type] || 'graph TD'];
-  for (const node of content.nodes) {
-    lines.push(`    ${sanitizeId(node.id)}["${escapeLabel(node.label)}"]`);
-  }
-  for (const edge of content.edges) {
-    const arrow = edge.label ? `-->|${escapeLabel(edge.label)}|` : '-->';
-    lines.push(`    ${sanitizeId(edge.source)} ${arrow} ${sanitizeId(edge.target)}`);
-  }
-  return lines.join('\n') + '\n';
-}
+function convertArchitecture(content) {
+  const lines = ['graph TD'];
 
-function convertSequence(content) {
-  const lines = ['sequenceDiagram'];
-  for (const node of content.nodes) {
-    lines.push(`    participant ${sanitizeId(node.id)} as ${node.label}`);
+  for (const component of content.components) {
+    lines.push(`    ${sanitizeId(component.id)}["${escapeLabel(component.label)}"]`);
   }
-  for (const edge of content.edges) {
-    const arrow = edge.label ? `->>${escapeLabel(edge.label)}` : '->>';
-    lines.push(`    ${sanitizeId(edge.source)}${arrow}${sanitizeId(edge.target)}: `);
-  }
-  return lines.join('\n') + '\n';
-}
 
-function convertLifecycle(content) {
-  const lines = ['stateDiagram-v2'];
-  for (const edge of content.edges) {
-    const label = edge.label ? ` : ${edge.label}` : '';
-    lines.push(`    ${sanitizeId(edge.source)} --> ${sanitizeId(edge.target)}${label}`);
+  for (const connection of content.connections || []) {
+    const arrow = connection.label ? `-->|${escapeLabel(connection.label)}|` : '-->';
+    lines.push(`    ${sanitizeId(connection.from)} ${arrow} ${sanitizeId(connection.to)}`);
   }
+
   return lines.join('\n') + '\n';
 }
 
 function convert(content) {
-  const type = content.meta.type;
-  if (type === 'sequence') return convertSequence(content);
-  if (type === 'lifecycle') return convertLifecycle(content);
-  return convertGraph(content);
+  if (content.diagram_type === 'architecture') {
+    return convertArchitecture(content);
+  }
+  throw new Error(`Unsupported diagram_type: ${content.diagram_type}`);
 }
 
 function main() {
@@ -88,6 +62,7 @@ function main() {
     mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
+  let converted = 0;
   for (const file of files) {
     const content = JSON.parse(readFileSync(file, 'utf-8'));
     const mermaid = convert(content);
@@ -95,9 +70,10 @@ function main() {
     const outPath = join(OUTPUT_DIR, outName);
     writeFileSync(outPath, mermaid, 'utf-8');
     console.log(`OK:   ${outPath}`);
+    converted++;
   }
 
-  console.log(`\nConverted ${files.length} file(s) to Mermaid.`);
+  console.log(`\nConverted ${converted} file(s) to Mermaid.`);
 }
 
 main();
