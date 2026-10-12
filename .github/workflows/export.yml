@@ -1,0 +1,37 @@
+name: Export Diagrams
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/archify/**'
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate JSON files
+        run: npm run validate
+
+      - name: Generate exports
+        run: npm run export:all
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagram-exports
+          path: exports/
+          retention-days: 30
