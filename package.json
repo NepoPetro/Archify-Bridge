@@ -7,7 +7,8 @@
   "scripts": {
     "validate": "node src/utils/validator.js",
     "export:mermaid": "node src/converters/to-mermaid.js",
-    "export:drawio": "node src/converters/to-drawio.js"
+    "export:drawio": "node src/converters/to-drawio.js",
+    "export:all": "npm run export:mermaid && npm run export:drawio"
   },
     "keywords": [
     "archify",
