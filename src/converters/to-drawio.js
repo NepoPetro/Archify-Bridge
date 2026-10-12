@@ -5,11 +5,16 @@ const ROOT = resolve(process.cwd());
 const SOURCE_DIR = join(ROOT, 'src', 'archify');
 const OUTPUT_DIR = join(ROOT, 'exports', 'drawio');
 
-const NODE_WIDTH = 160;
-const NODE_HEIGHT = 60;
-const HORIZONTAL_GAP = 80;
-const VERTICAL_GAP = 100;
-const COLUMNS = 3;
+const DEFAULT_SIZE = [140, 60];
+const COLOR_BY_TYPE = {
+  frontend: { fill: '#dae8fc', stroke: '#6c8ebf' },
+  backend: { fill: '#d5e8d4', stroke: '#82b366' },
+  database: { fill: '#ffe6cc', stroke: '#d79b00' },
+  cloud: { fill: '#e1d5e7', stroke: '#9673a6' },
+  security: { fill: '#f8cecc', stroke: '#b85450' },
+  messagebus: { fill: '#fff2cc', stroke: '#d6b656' },
+  external: { fill: '#f5f5f5', stroke: '#666666' }
+};
 
 function findJsonFiles(dir) {
   const results = [];
@@ -35,44 +40,61 @@ function escapeXml(str) {
     .replace(/'/g, '&apos;');
 }
 
-function computeLayout(nodes) {
-  const positions = {};
-  nodes.forEach((node, index) => {
-    const col = index % COLUMNS;
-    const row = Math.floor(index / COLUMNS);
-    positions[node.id] = {
-      x: col * (NODE_WIDTH + HORIZONTAL_GAP),
-      y: row * (NODE_HEIGHT + VERTICAL_GAP)
-    };
-  });
-  return positions;
+function styleForComponent(component) {
+  const colors = COLOR_BY_TYPE[component.type] || COLOR_BY_TYPE.external;
+  return [
+    'rounded=1',
+    'whiteSpace=wrap',
+    'html=1',
+    `fillColor=${colors.fill}`,
+    `strokeColor=${colors.stroke}`
+  ].join(';') + ';';
 }
 
-function buildCellForNode(node, position) {
-  const style = 'rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;';
-  return `        <mxCell id="${escapeXml(node.id)}" value="${escapeXml(node.label)}" style="${style}" vertex="1" parent="1">
-          <mxGeometry x="${position.x}" y="${position.y}" width="${NODE_WIDTH}" height="${NODE_HEIGHT}" as="geometry" />
+function buildCellForComponent(component) {
+  const pos = component.pos || [0, 0];
+  const size = component.size || DEFAULT_SIZE;
+  const value = component.sublabel
+    ? `${component.label}\n${component.sublabel}`
+    : component.label;
+
+  return `        <mxCell id="${escapeXml(component.id)}" value="${escapeXml(value)}" style="${styleForComponent(component)}" vertex="1" parent="1">
+          <mxGeometry x="${pos[0]}" y="${pos[1]}" width="${size[0]}" height="${size[1]}" as="geometry" />
         </mxCell>`;
 }
 
-function buildCellForEdge(edge, index) {
-  const id = edge.id ? escapeXml(edge.id) : `edge-${index}`;
-  const value = edge.label ? escapeXml(edge.label) : '';
-  const style = 'edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;';
-  return `        <mxCell id="${id}" value="${value}" style="${style}" edge="1" parent="1" source="${escapeXml(edge.source)}" target="${escapeXml(edge.target)}">
+function buildCellForConnection(connection, index) {
+  const id = connection.id ? escapeXml(connection.id) : `connection-${index}`;
+  const value = connection.label ? escapeXml(connection.label) : '';
+  const variant = connection.variant || 'default';
+
+  const styleParts = ['edgeStyle=orthogonalEdgeStyle', 'rounded=0', 'html=1'];
+  if (variant === 'dashed') {
+    styleParts.push('dashed=1');
+  }
+  if (variant === 'emphasis') {
+    styleParts.push('strokeWidth=3');
+  }
+  if (variant === 'security') {
+    styleParts.push('strokeColor=#b85450');
+  }
+
+  return `        <mxCell id="${id}" value="${value}" style="${styleParts.join(';')};" edge="1" parent="1" source="${escapeXml(connection.from)}" target="${escapeXml(connection.to)}">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>`;
 }
 
 function convert(content) {
-  const positions = computeLayout(content.nodes);
+  if (content.diagram_type !== 'architecture') {
+    throw new Error(`Unsupported diagram_type: ${content.diagram_type}`);
+  }
 
-  const nodeCells = content.nodes
-    .map(node => buildCellForNode(node, positions[node.id]))
+  const componentCells = content.components
+    .map(buildCellForComponent)
     .join('\n');
 
-  const edgeCells = content.edges
-    .map((edge, index) => buildCellForEdge(edge, index))
+  const connectionCells = (content.connections || [])
+    .map((connection, index) => buildCellForConnection(connection, index))
     .join('\n');
 
   const title = escapeXml(content.meta.title || 'Diagram');
@@ -80,12 +102,12 @@ function convert(content) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="archify-bridge" type="device">
   <diagram name="${title}" id="archify-diagram">
-    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-${nodeCells}
-${edgeCells}
+${componentCells}
+${connectionCells}
       </root>
     </mxGraphModel>
   </diagram>
@@ -105,6 +127,7 @@ function main() {
     mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
+  let converted = 0;
   for (const file of files) {
     const content = JSON.parse(readFileSync(file, 'utf-8'));
     const xml = convert(content);
@@ -112,9 +135,10 @@ function main() {
     const outPath = join(OUTPUT_DIR, outName);
     writeFileSync(outPath, xml, 'utf-8');
     console.log(`OK:   ${outPath}`);
+    converted++;
   }
 
-  console.log(`\nConverted ${files.length} file(s) to draw.io.`);
+  console.log(`\nConverted ${converted} file(s) to draw.io.`);
 }
 
 main();
