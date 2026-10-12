@@ -11,15 +11,30 @@ Archify generates verified, interactive system maps from code or system descript
 | Mermaid | `.mmd` | Available | GitHub, GitLab, Notion, Obsidian, Mermaid Live |
 | draw.io | `.drawio` | Available | [app.diagrams.net](https://app.diagrams.net), desktop app, Lucidchart |
 
+## Conversion Contract
+
+The conversion between Archify JSON and any target format is **structural, not visual**. This is a deliberate decision, documented in [ADR-008](docs/DECISIONS.md#adr-008---the-conversion-contract-is-structural-not-visual).
+
+| Guaranteed | Approximate | Not guaranteed |
+|------------|-------------|----------------|
+| Topology (components, connections, direction) | Visual style (colors, typography, stroke widths) | Pixel-perfect parity with Archify HTML |
+| Author-declared layout (`pos`, `size`) | Alignment to the Archify preset | Connection routing identical to Archify |
+| Relationship semantics (`variant`) | Type-based color mapping | Label placement identical to Archify |
+
+**What this means in practice:**
+The diagram opened in draw.io represents the same system, with the same structure and the same declared layout. It looks different because the two tools use different rendering engines, in the same way the same document looks different in Word and in Google Docs without ceasing to be the same document.
+
+If a diagram is structurally wrong (missing component, wrong connection, wrong position), that is a bug and must be fixed. If it looks visually different from the Archify HTML, that is expected.
+
 ## Architecture
 
 This repository does not reimplement Archify. Instead, it uses the official Archify CLI as a git submodule and delegates validation and rendering to it.
 
-- **`vendor/archify/`** — git submodule pinned to a specific commit of `tt-a1i/archify`.
-- **`src/archify/`** — source of truth: Archify JSON IR files.
-- **`src/converters/`** — one converter per target format.
-- **`src/utils/validator.js`** — orchestrates the official Archify validator via the submodule.
-- **`exports/`** — generated files (gitignored).
+- **`vendor/archify/`** - git submodule pinned to a specific commit of `tt-a1i/archify`.
+- **`src/archify/`** - source of truth: Archify JSON IR files.
+- **`src/converters/`** - one converter per target format.
+- **`src/utils/validator.js`** - orchestrates the official Archify validator via the submodule.
+- **`exports/`** - generated files (gitignored).
 
 ## Workflow
 
@@ -48,6 +63,7 @@ archify-bridge/
 │   └── archify/             # Official Archify (git submodule)
 ├── exports/                 # Generated files (gitignored)
 ├── docs/
+│   └── DECISIONS.md         # Architecture Decision Records
 └── package.json
 ```
 
@@ -89,6 +105,16 @@ npm run export:all                # Generate all formats
   ]
 }
 ```
+
+## Diagram Ecosystem
+
+Archify covers five diagram types: `architecture`, `workflow`, `sequence`, `dataflow`, `lifecycle`. It does not attempt to cover the full diagramming ecosystem.
+
+For diagram types outside that scope (network topology, C4 model, Gantt, ERD, UML, BPMN), a different tool is used as the canonical source. The full decision matrix is in [ADR-007](docs/DECISIONS.md#adr-007---diagram-ecosystem-scope-archify-for-what-it-covers-other-tools-for-the-rest).
+
+## Engineering Decisions
+
+The reasoning behind the architecture of this repository is documented in [docs/DECISIONS.md](docs/DECISIONS.md), following the ADR (Architecture Decision Record) format.
 
 ## Updating the Archify Submodule
 
