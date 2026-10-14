@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Authentication Platform - Observability",
+    "subtitle": "Layer 4 of 4: operational telemetry and failure handling",
+    "output": "auth-platform-4-observability.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "standard",
+    "viewBox": [840, 520]
+  },
+  "stages": [
+    { "label": "Emission" },
+    { "label": "Consumption" },
+    { "label": "Recovery" }
+  ],
+  "nodes": [
+    { "id": "structured_logs", "type": "backend", "label": "Structured Logs", "sublabel": "JSON event stream", "stage": 0, "row": 1 },
+    { "id": "grafana", "type": "external", "label": "Grafana", "sublabel": "dashboards and alerts", "stage": 1, "row": 0 },
+    { "id": "dlq_dlt", "type": "messagebus", "label": "DLQ / DLT", "sublabel": "failed event handling", "stage": 1, "row": 2 }
+  ],
+  "flows": [
+    { "from": "structured_logs", "to": "grafana", "label": "query + alert signals", "classification": "operational metadata", "variant": "emphasis" },
+    { "from": "structured_logs", "to": "dlq_dlt", "label": "unprocessed events", "classification": "failure recovery", "variant": "security" }
+  ],
+  "cards": [
+    { "dot": "violet", "title": "Observability", "items": ["Structured logs carry redacted audit metadata and metrics", "No raw credentials ever reach the log stream", "Grafana consumes operational signals for dashboards and alerts"] },
+    { "dot": "amber", "title": "Failure Handling", "items": ["Unprocessed events route to the DLQ / DLT", "Failed events are retained for inspection", "Recovery is a separate operational workflow"] }
+  ]
+}

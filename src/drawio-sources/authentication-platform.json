@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Authentication Platform - Data Lineage",
+    "subtitle": "End-to-end view of the authentication data lifecycle",
+    "output": "authentication-platform.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "standard",
+    "viewBox": [1600, 1800]
+  },
+  "components": [
+    { "id": "user", "type": "external", "label": "User", "sublabel": "origin", "pos": [80, 100], "size": [140, 60], "tag": "flow" },
+    { "id": "frontend", "type": "frontend", "label": "Frontend (React)", "sublabel": "client", "pos": [320, 100], "size": [160, 60], "tag": "flow" },
+
+    { "id": "bff", "type": "backend", "label": "BFF", "sublabel": "ADR-001 backend for frontend", "pos": [80, 280], "size": [160, 60], "tag": "flow" },
+    { "id": "api_node", "type": "backend", "label": "API Node.js", "sublabel": "request processing", "pos": [320, 280], "size": [160, 60], "tag": "flow" },
+
+    { "id": "bcrypt", "type": "security", "label": "Password Hashing (bcrypt)", "sublabel": "salt, slow by design", "pos": [80, 500], "size": [180, 60], "tag": "security" },
+    { "id": "jwt", "type": "security", "label": "JWT", "sublabel": "short-lived signed tokens", "pos": [300, 500], "size": [160, 60], "tag": "security" },
+    { "id": "middleware", "type": "security", "label": "Auth Middleware", "sublabel": "validates every request", "pos": [500, 500], "size": [180, 60], "tag": "security" },
+    { "id": "rate_limit", "type": "security", "label": "Rate Limiting", "sublabel": "lock after N failed attempts", "pos": [720, 500], "size": [180, 60], "tag": "security" },
+    { "id": "automatas", "type": "security", "label": "Session Automata", "sublabel": "formal state model", "pos": [940, 500], "size": [180, 60], "tag": "security" },
+
+    { "id": "sha256_chain", "type": "security", "label": "SHA-256 Chain", "sublabel": "chained audit hashes", "pos": [80, 720], "size": [180, 60], "tag": "security" },
+    { "id": "ecdsa", "type": "security", "label": "ECDSA secp256k1", "sublabel": "digital transaction signature", "pos": [300, 720], "size": [180, 60], "tag": "security" },
+    { "id": "aes_gcm", "type": "security", "label": "AES-256-GCM", "sublabel": "authenticated encryption", "pos": [520, 720], "size": [180, 60], "tag": "security" },
+    { "id": "kms_hsm", "type": "security", "label": "KMS / HSM", "sublabel": "key custody (planned)", "pos": [740, 720], "size": [180, 60], "tag": "security" },
+    { "id": "digital_twin", "type": "security", "label": "Ephemeral Digital Twin", "sublabel": "ADR-006 per-session monitor", "pos": [960, 720], "size": [200, 60], "tag": "security" },
+
+    { "id": "navier", "type": "security", "label": "Navier-Stokes KDF", "sublabel": "experimental, not in production", "pos": [300, 900], "size": [220, 60], "tag": "rejected" },
+
+    { "id": "pgbouncer", "type": "backend", "label": "PgBouncer", "sublabel": "ADR-003 connection pool", "pos": [80, 1080], "size": [180, 60], "tag": "flow" },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL", "sublabel": "primary database", "pos": [320, 1080], "size": [180, 60], "tag": "flow" },
+    { "id": "users_table", "type": "database", "label": "users", "sublabel": "identity records", "pos": [560, 1040], "size": [140, 60], "tag": "flow" },
+    { "id": "audit_logs", "type": "database", "label": "audit_logs", "sublabel": "append-only events", "pos": [560, 1140], "size": [140, 60], "tag": "audit" },
+    { "id": "audit_chain", "type": "security", "label": "Chained Audit Hash", "sublabel": "verify endpoint /audit/verify", "pos": [780, 1090], "size": [200, 60], "tag": "audit" },
+
+    { "id": "dlq", "type": "messagebus", "label": "DLQ", "sublabel": "ADR-004 dead letter queue", "pos": [1080, 1080], "size": [180, 60], "tag": "events" },
+
+    { "id": "prometheus", "type": "backend", "label": "Prometheus", "sublabel": "metrics collection", "pos": [80, 1380], "size": [160, 60], "tag": "monitoring" },
+    { "id": "grafana", "type": "external", "label": "Grafana", "sublabel": "dashboards", "pos": [300, 1380], "size": [160, 60], "tag": "monitoring" },
+    { "id": "dashboards", "type": "external", "label": "Dashboards", "sublabel": "operational views", "pos": [520, 1380], "size": [160, 60], "tag": "monitoring" },
+
+    { "id": "dlt", "type": "messagebus", "label": "DLT", "sublabel": "observability event topic", "pos": [80, 1600], "size": [200, 60], "tag": "events" },
+    { "id": "slack", "type": "external", "label": "Slack Notifications", "sublabel": "alerting", "pos": [340, 1560], "size": [180, 60], "tag": "events" },
+    { "id": "compliance", "type": "external", "label": "Compliance System", "sublabel": "legal and regulatory", "pos": [340, 1660], "size": [180, 60], "tag": "legal" },
+
+    { "id": "legal", "type": "external", "label": "Legal Framework", "sublabel": "Ley 25.326 / GDPR / Budapest", "pos": [1080, 1600], "size": [220, 60], "tag": "legal" }
+  ],
+  "connections": [
+    { "from": "user", "to": "frontend", "label": "sends data", "variant": "emphasis" },
+    { "from": "frontend", "to": "bff", "label": "auth request" },
+    { "from": "bff", "to": "api_node", "label": "validates request" },
+
+    { "from": "api_node", "to": "bcrypt", "label": "generates hash" },
+    { "from": "api_node", "to": "jwt", "label": "issues token" },
+    { "from": "api_node", "to": "middleware", "label": "guarded by" },
+    { "from": "middleware", "to": "rate_limit", "label": "enforces" },
+    { "from": "rate_limit", "to": "automatas", "label": "session state" },
+
+    { "from": "bcrypt", "to": "sha256_chain", "label": "audit event" },
+    { "from": "sha256_chain", "to": "ecdsa", "label": "signs transaction" },
+    { "from": "ecdsa", "to": "aes_gcm", "label": "encrypts record" },
+    { "from": "aes_gcm", "to": "kms_hsm", "label": "key custody" },
+    { "from": "ecdsa", "to": "digital_twin", "label": "monitors session" },
+
+    { "from": "sha256_chain", "to": "navier", "label": "proposed KDF (rejected)", "variant": "dashed" },
+
+    { "from": "api_node", "to": "pgbouncer", "label": "queries" },
+    { "from": "pgbouncer", "to": "postgres", "label": "pooled connection" },
+    { "from": "postgres", "to": "users_table", "label": "reads identity" },
+    { "from": "postgres", "to": "audit_logs", "label": "writes audit" },
+    { "from": "audit_logs", "to": "audit_chain", "label": "hash chained" },
+
+    { "from": "api_node", "to": "dlq", "label": "processing failure", "variant": "dashed" },
+    { "from": "audit_chain", "to": "dlq", "label": "integrity alert", "variant": "dashed" },
+
+    { "from": "api_node", "to": "prometheus", "label": "collects metrics", "variant": "dashed" },
+    { "from": "prometheus", "to": "grafana", "label": "metrics" },
+    { "from": "grafana", "to": "dashboards", "label": "renders" },
+
+    { "from": "dlq", "to": "dlt", "label": "escalates" },
+    { "from": "dlt", "to": "slack", "label": "notifies" },
+    { "from": "dlt", "to": "compliance", "label": "reports" },
+
+    { "from": "audit_chain", "to": "legal", "label": "legal evidence", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Flow", "items": ["User origin to frontend to BFF", "BFF isolates backend from clients (ADR-001)", "API Node.js processes all requests"] },
+    { "dot": "emerald", "title": "Security", "items": ["bcrypt hashes passwords with salt", "SHA-256 chains audit events", "ECDSA secp256k1 signs transactions", "AES-256-GCM encrypts sensitive data", "KMS/HSM for key custody (planned)"] },
+    { "dot": "orange", "title": "Events & Failures", "items": ["DLQ captures failed processing (ADR-004)", "DLT is the observability event topic", "Slack receives alerts", "Compliance system receives reports"] },
+    { "dot": "rose", "title": "Audit", "items": ["audit_logs is append-only", "Chained hash detects tampering", "/audit/verify endpoint confirms integrity"] },
+    { "dot": "violet", "title": "Monitoring", "items": ["Prometheus collects metrics", "Grafana renders dashboards", "Operational signals are separated from business logs (ADR-002)"] },
+    { "dot": "slate", "title": "Experimental", "items": ["Navier-Stokes as KDF (ADR-008)", "Mathematically grounded but not production-safe", "Excluded from real authentication flows"] },
+    { "dot": "amber", "title": "Legal Framework", "items": ["Ley 25.326 (Argentina)", "GDPR", "Budapest Convention", "Accountability and whistleblowing mechanisms"] }
+  ]
+}

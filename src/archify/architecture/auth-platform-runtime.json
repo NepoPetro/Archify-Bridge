@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Authentication Platform - Runtime",
+    "subtitle": "Authentication, storage, and observability layers",
+    "output": "auth-platform-runtime.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "user", "type": "external", "label": "End User", "sublabel": "web + mobile", "pos": [20, 100], "size": [160, 60] },
+    { "id": "frontend", "type": "frontend", "label": "Frontend / Client", "sublabel": "SPA", "pos": [320, 100], "size": [160, 60] },
+    { "id": "bff", "type": "backend", "label": "BFF", "sublabel": "backend for frontend", "pos": [620, 100], "size": [160, 60] },
+
+    { "id": "bcrypt", "type": "security", "label": "bcrypt", "sublabel": "password hash", "pos": [20, 280], "size": [160, 60] },
+    { "id": "auth", "type": "security", "label": "Auth Service", "sublabel": "issuer", "pos": [320, 280], "size": [160, 60] },
+    { "id": "jwt", "type": "security", "label": "JWT", "sublabel": "signed tokens", "pos": [620, 280], "size": [160, 60] },
+
+    { "id": "pgbouncer", "type": "backend", "label": "PgBouncer", "sublabel": "connection pooler", "pos": [20, 540], "size": [160, 60] },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL", "sublabel": "primary", "pos": [320, 540], "size": [160, 60] },
+    { "id": "tables", "type": "database", "label": "users / audit_logs / metrics", "sublabel": "tables", "pos": [620, 540], "size": [200, 60] },
+
+    { "id": "dlq", "type": "messagebus", "label": "DLQ / DLT", "sublabel": "failed events", "pos": [20, 800], "size": [160, 60] },
+    { "id": "grafana", "type": "external", "label": "Grafana", "sublabel": "dashboards", "pos": [320, 800], "size": [160, 60] },
+    { "id": "logs", "type": "backend", "label": "Structured Logs", "sublabel": "JSON events", "pos": [620, 800], "size": [160, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "authentication", "wraps": ["user", "frontend", "bff", "bcrypt", "auth", "jwt"], "pad": 20 },
+    { "kind": "region", "label": "storage", "wraps": ["pgbouncer", "postgres", "tables"], "pad": 20 },
+    { "kind": "region", "label": "observability", "wraps": ["grafana", "logs", "dlq"], "pad": 20 }
+  ],
+  "connections": [
+    { "from": "user", "to": "frontend", "label": "HTTPS", "variant": "emphasis" },
+    { "from": "frontend", "to": "bff", "label": "API call", "variant": "emphasis" },
+    { "from": "bff", "to": "auth", "label": "login", "variant": "emphasis" },
+    { "from": "auth", "to": "jwt", "label": "issue", "variant": "security" },
+    { "from": "auth", "to": "bcrypt", "label": "verify", "variant": "security" },
+    { "from": "auth", "to": "pgbouncer", "label": "query" },
+    { "from": "pgbouncer", "to": "postgres", "label": "pool", "variant": "emphasis" },
+    { "from": "postgres", "to": "tables", "label": "read/write", "variant": "emphasis" },
+    { "from": "bff", "to": "logs", "label": "emit", "variant": "dashed", "fromSide": "right", "toSide": "right", "via": [[850, 130], [850, 830]] },
+    { "from": "logs", "to": "grafana", "label": "metrics", "variant": "dashed" },
+    { "from": "logs", "to": "dlq", "label": "failures", "variant": "dashed", "fromSide": "bottom", "toSide": "bottom", "via": [[700, 920], [100, 920]] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Authentication", "items": ["BFF terminates client traffic", "Auth service issues signed JWTs", "Passwords verified against bcrypt hashes"] },
+    { "dot": "emerald", "title": "Storage", "items": ["PgBouncer pools all client connections", "PostgreSQL is the single primary", "users, audit_logs, and metrics are separate tables"] },
+    { "dot": "violet", "title": "Observability", "items": ["Structured JSON logs feed Grafana", "Failed events land in the implemented DLQ/DLT", "No raw payloads in dashboards"] }
+  ]
+}
