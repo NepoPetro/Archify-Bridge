@@ -219,3 +219,85 @@ None of those needs are met or broken by the difference between two rendering en
 | Fail loudly | Pipeline integrity |
 | Hybrid diagram ecosystem | Scope discipline |
 | Structural conversion contract | Achievable guarantees |
+
+---
+
+## ADR-009 — Archify scope: executive views, not detailed diagramming
+
+**Status:** Accepted
+**Date:** 2026-10-14
+**Supersedes:** Extends ADR-005 and ADR-008 with a tool-level decision.
+
+### Context
+
+Tmura (formerly Archify-Bridge) was created as a satellite project of Imut (1DFlfRMH) to produce data lineage diagrams for the Imut deliverable. The original goal was to use [Archify](https://github.com/tt-a1i/archify) as the diagramming engine and export its output to draw.io through a converter, avoiding the need to draw every arrow by hand in draw.io.
+
+Archify's public materials presented it as a tool capable of producing any diagram easily with AI assistance. The visual quality of its HTML output was the primary reason for adopting it.
+
+Over five days of work, including several overnight sessions, I evaluated Archify against the Imut data lineage requirements. This ADR records the outcome of that evaluation.
+
+### DAFO analysis
+
+**Strengths**
+
+- Excellent visual quality. The HTML output is the strongest asset of the tool and the reason I adopted it.
+- Default layout is attractive and presentation-ready for small diagrams.
+- Deterministic validation with machine-readable "repair receipts" that name the failing rule, the subject, and the supported fixes.
+- Self-contained output: a single HTML file with no external dependencies.
+- Visual presets (`signal-flow`, `blueprint`, `editorial`, `classic`) that establish a consistent look.
+- The design philosophy (agent as author, deterministic compilation) is the right direction for low-code and DataOps workflows.
+
+**Weaknesses**
+
+- Does not scale to robust architectures. Diagrams with more than approximately 12 nodes and multiple cross-stage flows consistently fail validation with layout, corridor, and label-collision errors that cannot be resolved by configuration alone.
+- The `dataflow` schema does not auto-position nodes as its documentation suggests. The `stage` and `row` fields assign coarse placement, but labels, corridors, and crossing rules are enforced by a layout engine with rules that are not documented and must be discovered by trial and error.
+- No language selector in the output. The schema accepts a single `locale`, which is insufficient for multilingual teams producing diagrams for end clients.
+- The manual workflow (author JSON, validate, adjust, re-validate) is slow. Each iteration costs a full round trip.
+- The skill requires agent infrastructure (Node, CLI, WSL on Windows) that is not available in every environment.
+- The public positioning implies universal applicability that the tool does not deliver.
+
+**Threats**
+
+- Dependency on an external git submodule that evolves independently. If Archify changes direction, the pinned commit becomes a frozen fork that we maintain alone.
+- The layout engine may never support the density required for governance and audit diagrams, which are the primary use case here.
+- The market has mature alternatives (Mermaid, draw.io, PlantUML) that, combined with custom rendering, deliver equivalent or better results without the density ceiling.
+
+**Opportunities**
+
+- The HTML aesthetic is adoptable as a reference. The custom `docs/diagrams/authentication-platform.html` in this repository already replicates and extends it (ES/PT/EN selector, zoom control, author credits, personal branding).
+- The visual preset system is a standard worth replicating in our own renderer.
+- If Archify's layout engine improves, this decision can be revisited without changing the repository architecture.
+
+### Decision
+
+1. **Archify is scoped to executive views.** It is used for diagrams with 8 to 12 nodes that communicate a system to a non-technical audience. The four `dataflow` diagrams in `src/archify/data-flow/` are the canonical example.
+2. **Detailed diagrams are authored in draw.io.** The faithful 28-node Imut data lineage diagram lives in `src/drawio-sources/authentication-platform.json` and is converted to `.drawio` by `src/converters/to-drawio.js`. This diagram does not go through Archify validation and is not constrained by its layout engine.
+3. **The custom HTML renderer is the presentation layer.** `docs/diagrams/authentication-platform.html` is the reference implementation. It replicates Archify's visual quality while adding multilingual support, personal branding, author credits, and interactive controls that Archify does not provide.
+
+### Rationale
+
+Archify is beautiful but inefficient for the diagrams this project needs. The tool works well for startups, small projects, or academic use cases where diagram density is low and a single language is acceptable. It is not a fit for data governance artifacts that must express layered lineage across a multilingual team.
+
+The client does not adapt to the tool. We adapt the tool to the client. If a tool requires reducing information to fit its layout engine, it is the wrong tool for that information.
+
+The decision is not a rejection of Archify. It is a scoping decision. Archify remains in the repository because it produces something genuinely valuable: executive views with an aesthetic we could not produce ourselves at this stage.
+
+### Consequence
+
+- Every diagram produced by this project has a clear tool of record:
+  - **Executive view:** Archify (`src/archify/`), 8–12 nodes.
+  - **Detailed view:** draw.io (`src/drawio-sources/`), no node limit.
+  - **Presentation layer:** custom HTML (`docs/diagrams/`), multilingual, branded.
+- The converter `src/converters/to-drawio.js` reads from both `src/archify/` and `src/drawio-sources/`, and skips `dataflow` diagram types because it does not support them.
+- No new schemas are added to Archify. No forks. If a diagram type is outside Archify's scope, a different tool is used.
+- This ADR is revisited if Archify's layout engine adds support for dense diagrams or if the custom renderer becomes the primary output.
+
+### Case study: Navier-Stokes as KDF (Imut, ADR-008 of Imut)
+
+The Imut project explored a Navier-Stokes-based key derivation function as an experimental cryptographic primitive. The proposal was mathematically grounded but not safe for production governance. It is retained as a rejected case study in the Imut diagram for audit and future reference.
+
+This case study belongs to the Imut project, not to Tmura. It is documented here only to preserve the lineage of the decision and to explain why the node appears in the faithful diagram.
+
+### Note on effort
+
+Five days of work were invested in this evaluation. The result is documented here so that the same effort is not repeated. If the tool is re-evaluated in the future, this DAFO is the starting point.
