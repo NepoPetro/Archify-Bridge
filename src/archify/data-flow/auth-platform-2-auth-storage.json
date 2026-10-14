@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Authentication Platform - Auth & Storage",
+    "subtitle": "Layer 2 of 4: credential verification and persistence",
+    "output": "auth-platform-2-auth-storage.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "standard",
+    "viewBox": [920, 560]
+  },
+  "stages": [
+    { "label": "Authentication" },
+    { "label": "Pooling" },
+    { "label": "Storage" }
+  ],
+  "nodes": [
+    { "id": "bcrypt", "type": "security", "label": "bcrypt", "sublabel": "stored password verifier", "stage": 0, "row": 0 },
+    { "id": "auth_service", "type": "security", "label": "Auth Service", "sublabel": "credential and session logic", "stage": 0, "row": 1, "width": 150 },
+    { "id": "jwt", "type": "security", "label": "JWT", "sublabel": "signed access token", "stage": 0, "row": 2 },
+
+    { "id": "pgbouncer", "type": "backend", "label": "PgBouncer", "sublabel": "connection pooler", "stage": 1, "row": 1 },
+
+    { "id": "postgresql", "type": "database", "label": "PostgreSQL", "sublabel": "primary database", "stage": 2, "row": 1 },
+    { "id": "auth_tables", "type": "database", "label": "users / audit_logs / metrics", "sublabel": "identity, audit, operational records", "stage": 2, "row": 2, "width": 180 }
+  ],
+    "flows": [
+    { "from": "auth_service", "to": "bcrypt", "label": "verify password", "classification": "password hash only", "variant": "security", "labelAt": [60, 315] },
+    { "from": "auth_service", "to": "jwt", "label": "issue token", "classification": "signed claims", "variant": "security", "labelAt": [140, 222] },
+    { "from": "auth_service", "to": "pgbouncer", "label": "identity + audit SQL", "classification": "PII and audit events", "labelDy": 54 },
+    { "from": "pgbouncer", "to": "postgresql", "label": "pooled queries", "classification": "internal", "variant": "emphasis" },
+    { "from": "postgresql", "to": "auth_tables", "label": "read / write records", "classification": "durable records", "variant": "emphasis", "labelDx": 60, "labelDy": 25 }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Authentication", "items": ["Auth Service verifies passwords against bcrypt hashes", "Signed JWTs carry session claims", "No raw password is ever stored"] },
+    { "dot": "emerald", "title": "Storage", "items": ["PgBouncer pools all client connections", "PostgreSQL is the single primary", "users, audit_logs, and metrics are separate tables"] }
+  ]
+}

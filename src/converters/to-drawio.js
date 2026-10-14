@@ -2,7 +2,10 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSy
 import { join, resolve, basename } from 'path';
 
 const ROOT = resolve(process.cwd());
-const SOURCE_DIR = join(ROOT, 'src', 'archify');
+const SOURCE_DIRS = [
+  join(ROOT, 'src', 'archify'),
+  join(ROOT, 'src', 'drawio-sources')
+];
 const OUTPUT_DIR = join(ROOT, 'exports', 'drawio');
 
 const DEFAULT_SIZE = [140, 60];
@@ -98,11 +101,14 @@ function convert(content) {
     .join('\n');
 
   const title = escapeXml(content.meta.title || 'Diagram');
+  const viewBox = Array.isArray(content.meta.viewBox) ? content.meta.viewBox : [1600, 900];
+  const pageWidth = Number.isFinite(viewBox[0]) && viewBox[0] > 0 ? viewBox[0] : 1600;
+  const pageHeight = Number.isFinite(viewBox[1]) && viewBox[1] > 0 ? viewBox[1] : 900;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="archify-bridge" type="device">
   <diagram name="${title}" id="archify-diagram">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="${pageWidth}" pageHeight="${pageHeight}" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -116,10 +122,13 @@ ${connectionCells}
 }
 
 function main() {
-  const files = findJsonFiles(SOURCE_DIR);
+  const requestedFiles = process.argv.slice(2).map((file) => resolve(file));
+  const files = requestedFiles.length > 0
+    ? requestedFiles
+    : SOURCE_DIRS.flatMap(findJsonFiles);
 
   if (files.length === 0) {
-    console.log('No JSON files found in src/archify/. Nothing to convert.');
+    console.log('No JSON files found in src/archify/ or src/drawio-sources/. Nothing to convert.');
     process.exit(0);
   }
 
@@ -130,6 +139,10 @@ function main() {
   let converted = 0;
   for (const file of files) {
     const content = JSON.parse(readFileSync(file, 'utf-8'));
+    if (content.diagram_type !== 'architecture') {
+      console.log(`SKIP: ${file} (unsupported diagram_type: ${content.diagram_type})`);
+      continue;
+    }
     const xml = convert(content);
     const outName = basename(file, '.json') + '.drawio';
     const outPath = join(OUTPUT_DIR, outName);

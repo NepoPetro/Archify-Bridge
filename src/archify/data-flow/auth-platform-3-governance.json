@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Authentication Platform - Governance",
+    "subtitle": "Layer 3 of 4: digital rights and cryptographic evidence",
+    "output": "auth-platform-3-governance.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "standard",
+    "viewBox": [960, 620]
+  },
+  "stages": [
+    { "label": "Digest" },
+    { "label": "Signature" },
+    { "label": "Encryption" },
+    { "label": "Evidence" }
+  ],
+  "nodes": [
+    { "id": "sha256", "type": "security", "label": "SHA-256", "sublabel": "audit event digest", "stage": 0, "row": 1 },
+    { "id": "ecdsa", "type": "security", "label": "ECC / ECDSA", "sublabel": "sign digest", "stage": 1, "row": 1 },
+    { "id": "aes_gcm", "type": "security", "label": "AES-256-GCM", "sublabel": "encrypt signed evidence", "stage": 2, "row": 1, "width": 160 },
+    { "id": "audit_trace", "type": "backend", "label": "Audit & Traceability", "sublabel": "append-only evidence", "stage": 3, "row": 1, "width": 170 },
+    { "id": "navier", "type": "security", "label": "Navier-Stokes Vector", "sublabel": "rejected case study", "tag": "REJECTED", "stage": 3, "row": 3, "width": 180 }
+  ],
+  "flows": [
+    { "from": "sha256", "to": "ecdsa", "label": "digest", "classification": "integrity", "variant": "security" },
+    { "from": "ecdsa", "to": "aes_gcm", "label": "signed audit record", "classification": "confidentiality + integrity", "variant": "security", "labelAt": [411, 315] },
+    { "from": "aes_gcm", "to": "audit_trace", "label": "sealed evidence", "classification": "append-only audit", "variant": "security", "labelAt": [635, 315] },
+    { "from": "sha256", "to": "navier", "label": "proposed transform (rejected)", "classification": "excluded from production", "variant": "dashed", "route": "bottom-channel" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Governance Chain", "items": ["SHA-256 produces a digest of each audit event", "ECC/ECDSA signs the digest with the service key", "AES-256-GCM encrypts the signed record before storage", "Audit & Traceability is append-only"] },
+    { "dot": "slate", "title": "Rejected Case Study", "items": ["A Navier-Stokes vector was proposed between SHA-256 and AES-256-GCM", "It would have introduced a modulus-based transformation", "Rejected: not safe for governance and encryption requirements", "Recorded for audit and future reference"] }
+  ]
+}

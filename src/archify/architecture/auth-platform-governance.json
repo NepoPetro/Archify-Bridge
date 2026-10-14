@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Authentication Platform - Governance",
+    "subtitle": "Digital rights, cryptography, and rejected proposals",
+    "output": "auth-platform-governance.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "ecc", "type": "security", "label": "ECC / ECDSA", "sublabel": "digital signature", "pos": [20, 120], "size": [160, 60] },
+    { "id": "sha", "type": "security", "label": "SHA-256", "sublabel": "hash chain", "pos": [320, 120], "size": [160, 60] },
+    { "id": "aes", "type": "security", "label": "AES-256-GCM", "sublabel": "encryption", "pos": [620, 120], "size": [160, 60] },
+
+    { "id": "audit", "type": "backend", "label": "Audit & Traceability", "sublabel": "append-only", "pos": [320, 340], "size": [200, 60] },
+
+    { "id": "looker", "type": "external", "label": "Looker Studio", "sublabel": "design-time BI", "pos": [20, 560], "size": [160, 60], "tag": "tooling" },
+
+    { "id": "navier", "type": "security", "label": "Navier-Stokes Vector", "sublabel": "proposed encryption vector", "pos": [320, 560], "size": [220, 60], "tag": "rejected" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "governance & digital rights", "wraps": ["ecc", "sha", "aes", "audit"], "pad": 20 },
+    { "kind": "region", "label": "design-time tooling", "wraps": ["looker"], "pad": 20 },
+    { "kind": "security-group", "label": "rejected - not safe for governance", "wraps": ["navier"], "pad": 20 }
+  ],
+  "connections": [
+    { "from": "ecc", "to": "sha", "label": "chain", "variant": "security" },
+    { "from": "sha", "to": "aes", "label": "encrypt", "variant": "security" },
+    { "from": "aes", "to": "audit", "label": "seal", "variant": "security" },
+    { "from": "sha", "to": "navier", "label": "proposed vector", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Governance", "items": ["Digital signatures use ECC/ECDSA", "Hash chain is SHA-256", "Payloads are encrypted with AES-256-GCM", "Audit trail is append-only"] },
+    { "dot": "amber", "title": "Design-Time", "items": ["Looker Studio builds the observability project", "Not part of the runtime request path", "Operates on aggregated data only"] },
+    { "dot": "slate", "title": "Rejected Case Study", "items": ["Navier-Stokes vector was proposed between SHA-256 and AES-256-GCM", "Would have introduced a modulus-based transformation", "Rejected: not safe for governance and encryption requirements", "Recorded for audit and future reference"] }
+  ]
+}

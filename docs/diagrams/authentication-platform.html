@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>1DFlfRMH - Data Flow Chart</title>
+<style>
+:root{color-scheme:dark;--bg:#06131f;--grid:#17425a;--panel:#071b2b;--panel-border:#27627f;--text:#e3f6ff;--muted:#91b8ca;--dim:#557e92;--arrow:#78a3b7}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:34px clamp(16px,3vw,48px);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--text);background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;background-position:-1px -1px}
+main{max-width:1800px;margin:auto}.eyebrow{display:block;width:fit-content;max-width:100%;margin:0 0 16px;padding:10px 14px;border:1px solid #34799a;color:#c7eaf5;background:rgba(7,27,43,.94);font:500 14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;letter-spacing:0;text-transform:none;overflow-wrap:anywhere}h1{margin:0;font-size:clamp(24px,3vw,36px);line-height:1.18;letter-spacing:-.025em;color:var(--text)}.subtitle{margin:8px 0 24px;color:var(--muted);font-size:15px}
+svg{display:block;width:100%;height:auto;background-color:var(--panel);background-image:linear-gradient(rgba(23,66,90,.42) 1px,transparent 1px),linear-gradient(90deg,rgba(23,66,90,.42) 1px,transparent 1px);background-size:32px 32px;border:1px solid var(--panel-border);box-shadow:0 24px 70px rgba(0,0,0,.38)}.node-label{font:600 14px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.01em;fill:var(--text)}.edge-label{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;fill:var(--muted);paint-order:stroke;stroke:var(--panel);stroke-width:5px;stroke-linejoin:round}svg rect{filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}svg path{stroke:var(--arrow)!important}
+@media(max-width:700px){body{padding:20px 12px}.subtitle{margin-bottom:16px}}
+.diagram-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 10px;padding:9px 12px;background:rgba(7,27,43,.94);border:1px solid #27627f;color:#91b8ca;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}.zoom-controls{display:flex;align-items:center;gap:6px}.zoom-controls button{min-width:34px;padding:5px 9px;border:1px solid #34799a;border-radius:2px;background:#0a2031;color:#d8f3ff;font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace;cursor:pointer}.zoom-controls button:hover{background:#12364d}.zoom-controls [data-zoom-reset]{min-width:62px;color:#66d9ef}.diagram-scroll{max-height:calc(100vh - 250px);overflow:auto;border:1px solid #27627f;background:#071b2b;scrollbar-color:#34799a #0a2031}.diagram-scroll svg{width:1600px;max-width:none;border:0;box-shadow:none}.node-label{font-size:14px}.edge-label{font-size:13px}.diagram-scroll svg path{stroke-width:2.2px!important}@media(max-width:700px){.diagram-toolbar{font-size:10px}.diagram-scroll{max-height:calc(100vh - 225px)}}
+.topline{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.topline .eyebrow{flex:1;max-width:1200px}.language-picker{display:flex;gap:5px;padding:4px;border:1px solid #27627f;background:rgba(7,27,43,.94)}.language-picker button{padding:7px 11px;border:1px solid transparent;background:transparent;color:#91b8ca;font:600 12px ui-monospace,SFMono-Regular,Consolas,monospace;cursor:pointer}.language-picker button:hover,.language-picker button[aria-pressed="true"]{border-color:#34799a;background:#12364d;color:#66d9ef}.diagram-scroll{height:auto;max-height:none;overflow:auto;border:1px solid #27627f;background:#071b2b;scrollbar-color:#34799a #0a2031}.diagram-scroll svg{width:1800px;max-width:none;border:0;box-shadow:none}</style></head>
+<body><main><div class="topline"><div class="eyebrow">By: Victoria P. Sitzer - Data Architect, Steward &amp; Governance Tech Lead | Vivianne Trindade - DataOps Lead &amp; Chief of Staff</div><div class="language-picker" role="group" aria-label="Select language"><button type="button" data-lang="es" aria-pressed="false">ES</button><button type="button" data-lang="pt" aria-pressed="false">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div></div><h1>1DFlfRMH - Data Flow Chart</h1><p class="subtitle">End-to-end view of the authentication data lifecycle</p><div class="diagram-toolbar"><span>Diagram canvas - scroll to explore</span><div class="zoom-controls"><button type="button" data-zoom-out aria-label="Zoom out">-</button><button type="button" data-zoom-reset>100%</button><button type="button" data-zoom-in aria-label="Zoom in">+</button></div></div><div class="diagram-scroll"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1800" role="img" aria-label="1DFlfRMH - Data Flow Chart"><defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#78a3b7" /></marker></defs>
+<path d="M 220 130 L 270 130 L 270 130 L 320 130" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="270" y="125" text-anchor="middle" class="edge-label">sends data</text>
+<path d="M 320 130 L 280 130 L 280 310 L 240 310" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="280" y="215" text-anchor="middle" class="edge-label">auth request</text>
+<path d="M 240 310 L 280 310 L 280 310 L 320 310" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="280" y="305" text-anchor="middle" class="edge-label">validates request</text>
+<path d="M 320 310 L 290 310 L 290 530 L 260 530" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="290" y="415" text-anchor="middle" class="edge-label">generates hash</text>
+<path d="M 320 310 L 390 310 L 390 530 L 460 530" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="390" y="415" text-anchor="middle" class="edge-label">issues token</text>
+<path d="M 480 310 L 490 310 L 490 530 L 500 530" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="490" y="415" text-anchor="middle" class="edge-label">guarded by</text>
+<path d="M 680 530 L 700 530 L 700 530 L 720 530" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="700" y="525" text-anchor="middle" class="edge-label">enforces</text>
+<path d="M 900 530 L 920 530 L 920 530 L 940 530" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="920" y="525" text-anchor="middle" class="edge-label">session state</text>
+<path d="M 260 530 L 170 530 L 170 750 L 80 750" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="170" y="635" text-anchor="middle" class="edge-label">audit event</text>
+<path d="M 260 750 L 280 750 L 280 750 L 300 750" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="280" y="745" text-anchor="middle" class="edge-label">signs transaction</text>
+<path d="M 480 750 L 500 750 L 500 750 L 520 750" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="500" y="745" text-anchor="middle" class="edge-label">encrypts record</text>
+<path d="M 700 750 L 720 750 L 720 750 L 740 750" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="720" y="745" text-anchor="middle" class="edge-label">key custody</text>
+<path d="M 480 750 L 720 750 L 720 750 L 960 750" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="720" y="745" text-anchor="middle" class="edge-label">monitors session</text>
+<path d="M 260 750 L 280 750 L 280 930 L 300 930" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="280" y="835" text-anchor="middle" class="edge-label">proposed KDF (rejected)</text>
+<path d="M 320 310 L 290 310 L 290 1110 L 260 1110" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="290" y="705" text-anchor="middle" class="edge-label">queries</text>
+<path d="M 260 1110 L 290 1110 L 290 1110 L 320 1110" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="290" y="1105" text-anchor="middle" class="edge-label">pooled connection</text>
+<path d="M 500 1110 L 530 1110 L 530 1070 L 560 1070" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="530" y="1085" text-anchor="middle" class="edge-label">reads identity</text>
+<path d="M 500 1110 L 530 1110 L 530 1170 L 560 1170" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="530" y="1135" text-anchor="middle" class="edge-label">writes audit</text>
+<path d="M 700 1170 L 740 1170 L 740 1120 L 780 1120" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="740" y="1140" text-anchor="middle" class="edge-label">hash chained</text>
+<path d="M 480 310 L 780 310 L 780 1110 L 1080 1110" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="780" y="705" text-anchor="middle" class="edge-label">processing failure</text>
+<path d="M 980 1120 L 1030 1120 L 1030 1110 L 1080 1110" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="1030" y="1110" text-anchor="middle" class="edge-label">integrity alert</text>
+<path d="M 320 310 L 280 310 L 280 1410 L 240 1410" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="280" y="855" text-anchor="middle" class="edge-label">collects metrics</text>
+<path d="M 240 1410 L 270 1410 L 270 1410 L 300 1410" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="270" y="1405" text-anchor="middle" class="edge-label">metrics</text>
+<path d="M 460 1410 L 490 1410 L 490 1410 L 520 1410" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="490" y="1405" text-anchor="middle" class="edge-label">renders</text>
+<path d="M 1080 1110 L 680 1110 L 680 1630 L 280 1630" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="680" y="1365" text-anchor="middle" class="edge-label">escalates</text>
+<path d="M 280 1630 L 310 1630 L 310 1590 L 340 1590" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="310" y="1605" text-anchor="middle" class="edge-label">notifies</text>
+<path d="M 280 1630 L 310 1630 L 310 1690 L 340 1690" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="310" y="1655" text-anchor="middle" class="edge-label">reports</text>
+<path d="M 980 1120 L 1030 1120 L 1030 1630 L 1080 1630" fill="none" stroke="#555" stroke-width="2" marker-end="url(#arrow)" />
+<text x="1030" y="1370" text-anchor="middle" class="edge-label">legal evidence</text>
+<rect x="80" y="100" width="140" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="150" y="130" text-anchor="middle" class="node-label"><tspan x="150" dy="0">User origin</tspan></text>
+<rect x="320" y="100" width="160" height="60" rx="10" fill="#123647" stroke="#66d9ef" stroke-width="2" />
+<text x="400" y="130" text-anchor="middle" class="node-label"><tspan x="400" dy="0">Frontend (React) client</tspan></text>
+<rect x="80" y="280" width="160" height="60" rx="10" fill="#10382f" stroke="#69dfbd" stroke-width="2" />
+<text x="160" y="310" text-anchor="middle" class="node-label"><tspan x="160" dy="0">BFF ADR-001 backend for frontend</tspan></text>
+<rect x="320" y="280" width="160" height="60" rx="10" fill="#10382f" stroke="#69dfbd" stroke-width="2" />
+<text x="400" y="310" text-anchor="middle" class="node-label"><tspan x="400" dy="0">API Node.js request processing</tspan></text>
+<rect x="80" y="500" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="170" y="530" text-anchor="middle" class="node-label"><tspan x="170" dy="0">Password Hashing (bcrypt) salt, slow by design</tspan></text>
+<rect x="300" y="500" width="160" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="380" y="530" text-anchor="middle" class="node-label"><tspan x="380" dy="0">JWT short-lived signed tokens</tspan></text>
+<rect x="500" y="500" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="590" y="530" text-anchor="middle" class="node-label"><tspan x="590" dy="0">Auth Middleware validates every request</tspan></text>
+<rect x="720" y="500" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="810" y="530" text-anchor="middle" class="node-label"><tspan x="810" dy="0">Rate Limiting lock after N failed attempts</tspan></text>
+<rect x="940" y="500" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="1030" y="530" text-anchor="middle" class="node-label"><tspan x="1030" dy="0">Session Automata formal state model</tspan></text>
+<rect x="80" y="720" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="170" y="750" text-anchor="middle" class="node-label"><tspan x="170" dy="0">SHA-256 Chain chained audit hashes</tspan></text>
+<rect x="300" y="720" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="390" y="750" text-anchor="middle" class="node-label"><tspan x="390" dy="0">ECDSA secp256k1 digital transaction signature</tspan></text>
+<rect x="520" y="720" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="610" y="750" text-anchor="middle" class="node-label"><tspan x="610" dy="0">AES-256-GCM authenticated encryption</tspan></text>
+<rect x="740" y="720" width="180" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="830" y="750" text-anchor="middle" class="node-label"><tspan x="830" dy="0">KMS / HSM key custody (planned)</tspan></text>
+<rect x="960" y="720" width="200" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="1060" y="750" text-anchor="middle" class="node-label"><tspan x="1060" dy="0">Ephemeral Digital Twin ADR-006 per-session monitor</tspan></text>
+<rect x="300" y="900" width="220" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="410" y="930" text-anchor="middle" class="node-label"><tspan x="410" dy="0">Navier-Stokes KDF experimental, not in production</tspan></text>
+<rect x="80" y="1080" width="180" height="60" rx="10" fill="#10382f" stroke="#69dfbd" stroke-width="2" />
+<text x="170" y="1110" text-anchor="middle" class="node-label"><tspan x="170" dy="0">PgBouncer ADR-003 connection pool</tspan></text>
+<rect x="320" y="1080" width="180" height="60" rx="10" fill="#29243f" stroke="#b4a8ff" stroke-width="2" />
+<text x="410" y="1110" text-anchor="middle" class="node-label"><tspan x="410" dy="0">PostgreSQL primary database</tspan></text>
+<rect x="560" y="1040" width="140" height="60" rx="10" fill="#29243f" stroke="#b4a8ff" stroke-width="2" />
+<text x="630" y="1070" text-anchor="middle" class="node-label"><tspan x="630" dy="0">users identity records</tspan></text>
+<rect x="560" y="1140" width="140" height="60" rx="10" fill="#29243f" stroke="#b4a8ff" stroke-width="2" />
+<text x="630" y="1170" text-anchor="middle" class="node-label"><tspan x="630" dy="0">audit_logs append-only events</tspan></text>
+<rect x="780" y="1090" width="200" height="60" rx="10" fill="#3b202b" stroke="#ff8da1" stroke-width="2" />
+<text x="880" y="1120" text-anchor="middle" class="node-label"><tspan x="880" dy="0">Chained Audit Hash verify endpoint /audit/verify</tspan></text>
+<rect x="1080" y="1080" width="180" height="60" rx="10" fill="#382a20" stroke="#ffad66" stroke-width="2" />
+<text x="1170" y="1110" text-anchor="middle" class="node-label"><tspan x="1170" dy="0">DLQ ADR-004 dead letter queue</tspan></text>
+<rect x="80" y="1380" width="160" height="60" rx="10" fill="#10382f" stroke="#69dfbd" stroke-width="2" />
+<text x="160" y="1410" text-anchor="middle" class="node-label"><tspan x="160" dy="0">Prometheus metrics collection</tspan></text>
+<rect x="300" y="1380" width="160" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="380" y="1410" text-anchor="middle" class="node-label"><tspan x="380" dy="0">Grafana dashboards</tspan></text>
+<rect x="520" y="1380" width="160" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="600" y="1410" text-anchor="middle" class="node-label"><tspan x="600" dy="0">Dashboards operational views</tspan></text>
+<rect x="80" y="1600" width="200" height="60" rx="10" fill="#382a20" stroke="#ffad66" stroke-width="2" />
+<text x="180" y="1630" text-anchor="middle" class="node-label"><tspan x="180" dy="0">DLT observability event topic</tspan></text>
+<rect x="340" y="1560" width="180" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="430" y="1590" text-anchor="middle" class="node-label"><tspan x="430" dy="0">Slack Notifications alerting</tspan></text>
+<rect x="340" y="1660" width="180" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="430" y="1690" text-anchor="middle" class="node-label"><tspan x="430" dy="0">Compliance System legal and regulatory</tspan></text>
+<rect x="1080" y="1600" width="220" height="60" rx="10" fill="#132b3a" stroke="#a7cad9" stroke-width="2" />
+<text x="1190" y="1630" text-anchor="middle" class="node-label"><tspan x="1190" dy="0">Legal Framework Ley 25.326 / GDPR / Budapest</tspan></text></svg></div></main><script>
+(() => {
+  const nodeTranslations = {
+    es: ["Usuario\nOrigen","Frontend (React)\nCliente","BFF\nBackend para frontend (ADR-001)","API Node.js\nProcesamiento de solicitudes","Hash de contrasenas (bcrypt)\nSalado y lento por diseno","JWT\nTokens firmados de corta duracion","Middleware de autenticacion\nValida cada solicitud","Limite de solicitudes\nBloqueo tras N intentos fallidos","Automata de sesion\nModelo formal de estados","Cadena SHA-256\nHashes de auditoria encadenados","ECDSA secp256k1\nFirma digital de transacciones","AES-256-GCM\nCifrado autenticado","KMS / HSM\nCustodia de claves (planificada)","Gemelo digital efimero\nMonitor por sesion (ADR-006)","KDF Navier-Stokes\nExperimental; no esta en produccion","PgBouncer\nPool de conexiones (ADR-003)","PostgreSQL\nBase de datos principal","users\nRegistros de identidad","audit_logs\nEventos de solo adicion","Hash de auditoria encadenado\nVerificar en /audit/verify","DLQ\nCola de mensajes fallidos (ADR-004)","Prometheus\nRecoleccion de metricas","Grafana\nPaneles","Paneles\nVistas operativas","DLT\nTema de eventos de observabilidad","Notificaciones de Slack\nAlertas","Sistema de cumplimiento\nLegal y normativo","Marco legal\nLey 25.326 / GDPR / Budapest"],
+    pt: ["Usuario\nOrigem","Frontend (React)\nCliente","BFF\nBackend para frontend (ADR-001)","API Node.js\nProcessamento de requisicoes","Hash de senhas (bcrypt)\nSalt e lento por design","JWT\nTokens assinados de curta duracao","Middleware de autenticacao\nValida cada requisicao","Limite de requisicoes\nBloqueio apos N falhas","Automato de sessao\nModelo formal de estados","Cadeia SHA-256\nHashes de auditoria encadeados","ECDSA secp256k1\nAssinatura digital de transacoes","AES-256-GCM\nCriptografia autenticada","KMS / HSM\nCustodia de chaves (planejada)","Gemeo digital efemero\nMonitor por sessao (ADR-006)","KDF Navier-Stokes\nExperimental; fora de producao","PgBouncer\nPool de conexoes (ADR-003)","PostgreSQL\nBanco de dados principal","users\nRegistros de identidade","audit_logs\nEventos somente de acrescimo","Hash de auditoria encadeado\nVerificar em /audit/verify","DLQ\nFila de mensagens mortas (ADR-004)","Prometheus\nColeta de metricas","Grafana\nPaines","Paineis\nVisoes operacionais","DLT\nTopico de eventos de observabilidade","Notificacoes do Slack\nAlertas","Sistema de conformidade\nLegal e regulatorio","Marco legal\nLey 25.326 / GDPR / Budapeste"]
+  };
+  const edgeTranslations = {
+    es: ["Envia datos","Solicitud de autenticacion","Valida la solicitud","Genera el hash","Emite el token","Protegido por","Aplica limites","Estado de sesion","Evento de auditoria","Firma la transaccion","Cifra el registro","Custodia de claves","Supervisa la sesion","KDF propuesto (rechazado)","Consultas","Conexion agrupada","Lee la identidad","Escribe auditoria","Hash encadenado","Fallo de procesamiento","Alerta de integridad","Recopila metricas","Metricas","Renderiza","Escala","Notifica","Informa","Evidencia legal"],
+    pt: ["Envia dados","Solicitacao de autenticacao","Valida a solicitacao","Gera o hash","Emite o token","Protegido por","Aplica limites","Estado da sessao","Evento de auditoria","Assina a transacao","Criptografa o registro","Custodia de chaves","Monitora a sessao","KDF proposto (rejeitado)","Consultas","Conexao agrupada","Le a identidade","Grava auditoria","Hash encadeado","Falha de processamento","Alerta de integridade","Coleta metricas","Metricas","Renderiza","Escala","Notifica","Reporta","Evidencia legal"]
+  };
+  const ui = {
+    es: { title:"1DFlfRMH - Diagrama de flujo de datos", subtitle:"Vista integral del ciclo de vida de los datos de autenticacion", credit:"Por: Victoria P. Sitzer - Arquitecta de Datos, Lider de Tecnologia de Stewardship y Gobernanza | Vivianne Trindade - Lider de DataOps y Jefa de Gabinete", canvas:"Lienzo del diagrama - desplaza para explorar", zoomIn:"Acercar", zoomOut:"Alejar" },
+    pt: { title:"1DFlfRMH - Diagrama de fluxo de dados", subtitle:"Visao completa do ciclo de vida dos dados de autenticacao", credit:"Por: Victoria P. Sitzer - Arquiteta de Dados, Lider de Tecnologia de Stewardship e Governanca | Vivianne Trindade - Lider de DataOps e Chefe de Gabinete", canvas:"Area do diagrama - role para explorar", zoomIn:"Ampliar", zoomOut:"Reduzir" },
+    en: { title:"1DFlfRMH - Data Flow Chart", subtitle:"End-to-end view of the authentication data lifecycle", credit:"By: Victoria P. Sitzer - Data Architect, Steward & Governance Tech Lead | Vivianne Trindade - DataOps Lead & Chief of Staff", canvas:"Diagram canvas - scroll to explore", zoomIn:"Zoom in", zoomOut:"Zoom out" }
+  };
+  const svg = document.querySelector('.diagram-scroll svg');
+  const resetButton = document.querySelector('[data-zoom-reset]');
+  const measure = document.createElement('canvas').getContext('2d');
+  const nodes = [...document.querySelectorAll('.node-label')];
+  const edges = [...document.querySelectorAll('.edge-label')];
+  let zoom = 1;
+  const setZoom = (next) => {
+    zoom = Math.min(2.5, Math.max(0.75, next));
+    svg.style.width = `${1800 * zoom}px`;
+    resetButton.textContent = `${Math.round(zoom * 100)}%`;
+  };
+  document.querySelector('[data-zoom-in]').addEventListener('click', () => setZoom(zoom + 0.15));
+  document.querySelector('[data-zoom-out]').addEventListener('click', () => setZoom(zoom - 0.15));
+  resetButton.addEventListener('click', () => setZoom(1));
+  function renderNode(label, value) {
+    const rect = label.previousElementSibling;
+    if (!rect || rect.tagName.toLowerCase() !== 'rect') return;
+    measure.font = getComputedStyle(label).font;
+    const maxWidth = rect.width.baseVal.value - 16;
+    const wrapped = [];
+    value.split('\n').forEach((sourceLine) => {
+      let line = '';
+      sourceLine.trim().split(/\s+/).forEach((word) => {
+        const candidate = line ? `${line} ${word}` : word;
+        if (line && measure.measureText(candidate).width > maxWidth) { wrapped.push(line); line = word; }
+        else line = candidate;
+      });
+      if (line) wrapped.push(line);
+    });
+    const centerX = rect.x.baseVal.value + rect.width.baseVal.value / 2;
+    const centerY = rect.y.baseVal.value + rect.height.baseVal.value / 2;
+    label.replaceChildren();
+    label.setAttribute('y', centerY - ((wrapped.length - 1) * 8));
+    wrapped.forEach((line, index) => {
+      const span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+      span.setAttribute('x', centerX); span.setAttribute('dy', index === 0 ? '0' : '16'); span.textContent = line; label.appendChild(span);
+    });
+  }
+  nodes.forEach((node) => { node.dataset.original = [...node.querySelectorAll('tspan')].map((span) => span.textContent).join('\n'); });
+  edges.forEach((edge) => { edge.dataset.original = edge.textContent.trim(); });
+  const langButtons = [...document.querySelectorAll('[data-lang]')];
+  function setLanguage(lang) {
+    const text = ui[lang] || ui.es;
+    document.documentElement.lang = lang;
+    document.title = text.title;
+    document.querySelector('h1').textContent = text.title;
+    document.querySelector('.subtitle').textContent = text.subtitle;
+    document.querySelector('.eyebrow').textContent = text.credit;
+    document.querySelector('.diagram-toolbar > span').textContent = text.canvas;
+    document.querySelector('[data-zoom-in]').setAttribute('aria-label', text.zoomIn);
+    document.querySelector('[data-zoom-out]').setAttribute('aria-label', text.zoomOut);
+    svg.setAttribute('aria-label', text.title);
+    nodes.forEach((node, index) => renderNode(node, nodeTranslations[lang]?.[index] || node.dataset.original));
+    edges.forEach((edge, index) => { edge.textContent = edgeTranslations[lang]?.[index] || edge.dataset.original; });
+    langButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === lang)));
+    try { localStorage.setItem('authentication-platform-language', lang); } catch (_) {}
+  }
+  langButtons.forEach((button) => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
+  let initialLanguage = 'es';
+  try { const saved = localStorage.getItem('authentication-platform-language'); if (ui[saved]) initialLanguage = saved; } catch (_) {}
+  setZoom(1);
+  setLanguage(initialLanguage);
+})();
+</script>
+</body></html>

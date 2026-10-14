@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Authentication Platform - Ingress",
+    "subtitle": "Layer 1 of 4: client entry path",
+    "output": "auth-platform-1-ingress.html",
+    "visual_preset": "blueprint",
+    "animation": "trace",
+    "quality_profile": "standard",
+    "viewBox": [720, 480]
+  },
+  "stages": [
+    { "label": "Client" },
+    { "label": "Edge" },
+    { "label": "Application" }
+  ],
+  "nodes": [
+    { "id": "end_user", "type": "external", "label": "End User", "sublabel": "web + mobile", "stage": 0, "row": 0 },
+    { "id": "frontend", "type": "frontend", "label": "Frontend / Client", "sublabel": "SPA / native app", "stage": 1, "row": 0 },
+    { "id": "bff", "type": "backend", "label": "BFF", "sublabel": "backend for frontend", "stage": 2, "row": 0 }
+  ],
+  "flows": [
+    { "from": "end_user", "to": "frontend", "label": "HTTPS request", "classification": "public" },
+    { "from": "frontend", "to": "bff", "label": "auth API call", "classification": "credential-bearing" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Ingress", "items": ["End user reaches the platform over HTTPS", "Frontend is the only client-facing component", "BFF terminates all client traffic before authentication"] }
+  ]
+}
