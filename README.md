@@ -1,69 +1,55 @@
-# Archify Bridge
+# Tmura = Archify-Bridge
 
 Bridge between [Archify](https://github.com/tt-a1i/archify) JSON IR and multiple diagramming tools.
 
-Archify generates verified, interactive system maps from code or system descriptions. This repository takes those JSON sources as input and converts them into portable formats that can be opened, edited, and shared with other tools.
+**Tmura** (תְּמוּרָה, "bridge" in Hebrew) is a satellite project of [Imut (1DFlfRMH)](https://github.com/NepoPetro), a data governance and digital rights platform. Tmura produces the data lineage diagrams that Imut requires as deliverables: an executive view for communication, and a detailed view for engineering and audit.
 
-## Supported Formats
+## Why this project exists
 
-| Format | Extension | Status | Import Target |
-|--------|-----------|--------|---------------|
-| Mermaid | `.mmd` | Available | GitHub, GitLab, Notion, Obsidian, Mermaid Live |
-| draw.io | `.drawio` | Available | [app.diagrams.net](https://app.diagrams.net), desktop app, Lucidchart |
+Imut needed to produce a data lineage diagram that reflects the actual end-to-end flow of authentication data across seven layers: origin, processing, security, storage, failures, observability, and events.
 
-## Conversion Contract
+Archify promised an AI-assisted path to that diagram. After evaluating it in depth (see [ADR-009](docs/DECISIONS.md#adr-009--archify-scope-executive-views-not-detailed-diagramming)), the conclusion was that Archify is excellent for executive views but does not scale to detailed diagrams with more than approximately 12 nodes.
 
-The conversion between Archify JSON and any target format is **structural, not visual**. This is a deliberate decision, documented in [ADR-008](docs/DECISIONS.md#adr-008---the-conversion-contract-is-structural-not-visual).
+Tmura solves that by separating the tool of record per diagram type.
 
-| Guaranteed | Approximate | Not guaranteed |
-|------------|-------------|----------------|
-| Topology (components, connections, direction) | Visual style (colors, typography, stroke widths) | Pixel-perfect parity with Archify HTML |
-| Author-declared layout (`pos`, `size`) | Alignment to the Archify preset | Connection routing identical to Archify |
-| Relationship semantics (`variant`) | Type-based color mapping | Label placement identical to Archify |
+## Tool of record per diagram type
 
-**What this means in practice:**
-The diagram opened in draw.io represents the same system, with the same structure and the same declared layout. It looks different because the two tools use different rendering engines, in the same way the same document looks different in Word and in Google Docs without ceasing to be the same document.
+| View | Tool | Location | Node limit |
+|------|------|----------|------------|
+| Executive view | Archify | `src/archify/` | 8–12 nodes |
+| Detailed view | draw.io | `src/drawio-sources/` | none |
+| Presentation layer | Custom HTML | `docs/diagrams/` | none |
 
-If a diagram is structurally wrong (missing component, wrong connection, wrong position), that is a bug and must be fixed. If it looks visually different from the Archify HTML, that is expected.
+The three deliverables represent the same system at different levels of detail. They are not competing views; they are layers.
 
-## Architecture
+## Supported formats
 
-This repository does not reimplement Archify. Instead, it uses the official Archify CLI as a git submodule and delegates validation and rendering to it.
+| Format | Extension | Generated from | Import target |
+|--------|-----------|---------------|---------------|
+| HTML (Archify) | `.html` | `src/archify/*.json` | Browser |
+| draw.io | `.drawio` | `src/drawio-sources/*.json` | [app.diagrams.net](https://app.diagrams.net) |
+| HTML (custom) | `.html` | Hand-authored | Browser |
 
-- **`vendor/archify/`** - git submodule pinned to a specific commit of `tt-a1i/archify`.
-- **`src/archify/`** - source of truth: Archify JSON IR files.
-- **`src/converters/`** - one converter per target format.
-- **`src/utils/validator.js`** - orchestrates the official Archify validator via the submodule.
-- **`exports/`** - generated files (gitignored).
-
-## Workflow
-
-1. Write Archify JSON files inside `src/archify/<type>/`.
-2. Validate them with `npm run validate`.
-3. Generate exports with `npm run export:all`.
-4. Find generated files inside `exports/<format>/`.
-
-Every push that modifies `src/archify/**` triggers GitHub Actions, which validates the JSONs and publishes the exports as downloadable artifacts.
-
-## Repository Structure
+## Repository structure
 
 ```
-archify-bridge/
+tmura/
 ├── .github/workflows/       # CI: validation and export
 ├── src/
-│   ├── archify/             # Source of truth: Archify JSON files
+│   ├── archify/             # Executive views (validated against Archify schema)
 │   │   ├── architecture/
-│   │   ├── workflow/
-│   │   ├── sequence/
-│   │   ├── data-flow/
-│   │   └── lifecycle/
-│   ├── converters/          # One file per target format
+│   │   └── data-flow/
+│   ├── drawio-sources/      # Detailed views (not validated by Archify)
+│   ├── converters/          # One converter per target format
 │   └── utils/               # Validator (delegates to Archify CLI)
 ├── vendor/
-│   └── archify/             # Official Archify (git submodule)
-├── exports/                 # Generated files (gitignored)
+│   └── archify/             # Official Archify (git submodule, pinned)
 ├── docs/
-│   └── DECISIONS.md         # Architecture Decision Records
+│   ├── DECISIONS.md         # Architecture Decision Records
+│   └── diagrams/
+│       ├── authentication-platform.html    # Custom branded HTML
+│       └── archify/                        # Archify-generated HTMLs
+├── exports/                 # Generated files (gitignored)
 └── package.json
 ```
 
@@ -71,54 +57,54 @@ archify-bridge/
 
 ```bash
 npm install                       # Install dependencies
-npm run validate                  # Validate all JSONs against the official Archify schema
-npm run export:mermaid            # Generate Mermaid files
-npm run export:drawio             # Generate draw.io files
-npm run export:all                # Generate all formats
+npm run validate                  # Validate all Archify JSONs against the official schema
+npm run export:drawio             # Generate draw.io files from src/archify + src/drawio-sources
+npm run export:mermaid            # Generate Mermaid files from src/archify
+npm run export:all                # Run all exporters
 ```
 
-## Adding a Diagram
+## Workflow
 
-1. Create a new JSON file inside `src/archify/<type>/`, where `<type>` is one of: `architecture`, `workflow`, `sequence`, `data-flow`, `lifecycle`.
-2. Follow the official Archify schema. Reference: `vendor/archify/archify/schemas/`.
-3. Run `npm run validate` locally.
-4. Commit and open a Pull Request.
+1. **Author the source JSON.**
+   - Executive views: `src/archify/<type>/<name>.json` (must validate).
+   - Detailed views: `src/drawio-sources/<name>.json` (no validation).
+2. **Validate** the Archify sources: `npm run validate`.
+3. **Generate exports:** `npm run export:all`.
+4. **Find outputs** in `exports/<format>/`.
+5. **For Archify diagrams, render the final HTML:**
+   ```bash
+   node vendor/archify/archify/bin/archify.mjs finalize <type> <input.json> <output.html> \
+     --quality standard --candidate-sha256 <HASH> --json
+   ```
+   The hash comes from `npm run validate`.
 
-## Example
+## Context: the Imut project
 
-```json
-{
-  "schema_version": 1,
-  "diagram_type": "architecture",
-  "meta": {
-    "title": "Example Architecture",
-    "output": "example.html",
-    "visual_preset": "signal-flow",
-    "animation": "trace"
-  },
-  "components": [
-    { "id": "browser", "type": "frontend", "label": "Browser", "pos": [60, 80], "size": [140, 60] },
-    { "id": "api", "type": "backend", "label": "API Gateway", "pos": [280, 80], "size": [140, 60] }
-  ],
-  "connections": [
-    { "from": "browser", "to": "api", "label": "HTTPS", "variant": "emphasis" }
-  ]
-}
-```
+Tmura exists to serve [Imut](https://github.com/NepoPetro). The current data lineage diagram covers the Imut authentication platform across seven layers:
 
-## Diagram Ecosystem
+1. **Origin** — end user, frontend
+2. **Processing** — BFF, API Node.js
+3. **Security** — bcrypt, JWT, auth middleware, rate limiting, session automata
+4. **Storage** — PgBouncer, PostgreSQL, users, audit_logs, chained audit hash
+5. **Failures** — Dead Letter Queue
+6. **Observability** — Prometheus, Grafana, dashboards
+7. **Events** — Dead Letter Topic, Slack notifications, compliance system
 
-Archify covers five diagram types: `architecture`, `workflow`, `sequence`, `dataflow`, `lifecycle`. It does not attempt to cover the full diagramming ecosystem.
+The diagram also records one rejected case study from Imut's ADR-008: a Navier-Stokes-based key derivation function that was explored but not adopted for production.
 
-For diagram types outside that scope (network topology, C4 model, Gantt, ERD, UML, BPMN), a different tool is used as the canonical source. The full decision matrix is in [ADR-007](docs/DECISIONS.md#adr-007---diagram-ecosystem-scope-archify-for-what-it-covers-other-tools-for-the-rest).
+## Architecture decisions
 
-## Engineering Decisions
+All engineering decisions are documented in [docs/DECISIONS.md](docs/DECISIONS.md):
 
-The reasoning behind the architecture of this repository is documented in [docs/DECISIONS.md](docs/DECISIONS.md), following the ADR (Architecture Decision Record) format.
+- **ADR-001** to **ADR-003**: source of truth, submodule governance, pinned commit.
+- **ADR-004** and **ADR-008**: conversion contract (structural, not visual).
+- **ADR-005** and **ADR-006**: verifiable formats, fail-fast validation.
+- **ADR-007**: hybrid diagram ecosystem scope.
+- **ADR-009**: Archify scope — executive views only. Includes DAFO analysis.
 
-## Updating the Archify Submodule
+## Updating the Archify submodule
 
-The submodule is pinned to a specific commit for reproducible builds. To update:
+The submodule is pinned to a specific commit for reproducible builds.
 
 ```bash
 git submodule update --remote vendor/archify
