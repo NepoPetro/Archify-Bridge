@@ -4867,9 +4867,35 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       .source-evidence-beacon,
       svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-anchor], svg [data-legend-hit], svg { transition: none !important; }
     }
+    .site-navigation {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem clamp(1rem, 3vw, 2rem);
+      background: var(--panel);
+      border-bottom: 1px solid var(--panel-border);
+      color: var(--text);
+      font: 500 0.9rem/1.4 system-ui, sans-serif;
+    }
+    .site-navigation a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .site-navigation a:hover,
+    .site-navigation a:focus-visible {
+      color: var(--arrow-emphasis);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+    svg a { cursor: pointer; }
   </style>
 </head>
 <body>
+  <nav class="site-navigation" aria-label="Documentation">
+    <a href="README.html">README</a>
+    <a href="DECISIONS.html">Decisiones</a>
+    <a href="https://github.com/NepoPetro/Archify-Bridge" target="_blank" rel="noopener noreferrer">Repositorio</a>
+  </nav>
   <!-- Toolbar: theme, live visual style, trace motion, presentation stage, and export.
        Motion appears only for trace-enabled artifacts and has no shortcut;
        Keyboard: T toggles theme, S cycles style, F toggles the stage, E opens export. -->
@@ -5211,6 +5237,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <g id="node-project_docs" data-node-id="project_docs" data-node-label="Project Documentation" tabindex="0" role="button" aria-label="Focus Project Documentation, ADR-001 through ADR-009 · README · wiki, Governance &amp; Guidance" aria-pressed="false" data-node-kind="external" data-node-sublabel="ADR-001 through ADR-009 · README · wiki" data-node-tag="governance" data-node-context="Governance &amp; Guidance">
           <title>Project Documentation · ADR-001 through ADR-009 · README · wiki · Governance &amp; Guidance · governance</title>
+          <a href="adrs-html/index.html" target="_blank" rel="noopener noreferrer" aria-label="Open the ADR index">
           <rect x="330" y="830" width="260" height="86" rx="6" class="c-mask"/>
           <rect x="330" y="830" width="260" height="86" rx="6" class="c-external" data-animate="node" style="--step:10" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(336 836) scale(0.6875)">
@@ -5220,6 +5247,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-node-label="" data-detail-anchor="" x="460" y="871" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Project Documentation</text>
         <text data-detail="context" x="460" y="887" class="t-muted" font-size="9" text-anchor="middle">ADR-001 through ADR-009 · README · wiki</text>
         <text data-detail="fine" x="460" y="908" class="t-external" font-size="7" text-anchor="middle">governance</text>
+          </a>
         </g>
 
         <!-- Connection labels -->

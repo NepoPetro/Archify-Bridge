@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="../../">
+  <title>Tmura — adr-008-the-conversion-contract-is-structural</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+<h1>ADR-008: The Conversion Contract Is Structural</h1>
+<ul>
+<li><strong>Status:</strong> Accepted</li>
+<li><strong>Date:</strong> 2026-10-14</li>
+</ul>
+<h2>Context</h2>
+<p>Archify, Mermaid, and draw.io render diagrams using different engines. Their typography, styling, edge routing, and label placement cannot be expected to match exactly. ADR-004 specifies which structural information converters must preserve.</p>
+<h2>Decision</h2>
+<p>Define converter correctness by structural fidelity, not pixel-level visual parity. Preserve components, topology, direction, supported relationship semantics, and explicit geometry where the target format supports it. Treat target-specific styling and routing as approximate presentation.</p>
+<h2>Consequences</h2>
+<ul>
+<li>Visual differences between source and target renderings are expected and do not alone indicate a conversion defect.</li>
+<li>A structural mismatch is a defect even if the result looks polished.</li>
+<li>Documentation must distinguish guaranteed structure from approximate visual treatment.</li>
+<li>Users choose the rendering that suits their task: Archify HTML for executive communication and the target artifact for editing or detailed review.</li>
+</ul>
+
+  </main>
+</body>
+</html>

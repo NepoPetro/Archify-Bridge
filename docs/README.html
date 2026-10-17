@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="../">
+  <title>Tmura — README</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+<h1>Tmura = Archify-Bridge</h1>
+<p>Bridge between <a href="https://github.com/tt-a1i/archify">Archify</a> JSON IR and multiple diagramming tools.</p>
+<p><strong>Tmura</strong> (תְּמוּרָה, &quot;bridge&quot; in Hebrew) is a satellite project of <a href="https://github.com/NepoPetro">Imut (1DFlfRMH)</a>, a data governance and digital rights platform. Tmura produces the data lineage diagrams that Imut requires as deliverables: an executive view for communication, and a detailed view for engineering and audit.</p>
+<h2>Why this project exists</h2>
+<p>Imut needed to produce a data lineage diagram that reflects the actual end-to-end flow of authentication data across seven layers: origin, processing, security, storage, failures, observability, and events.</p>
+<p>Archify promised an AI-assisted path to that diagram. After evaluating it in depth (see <a href="docs/DECISIONS.md#adr-009--archify-scope-executive-views-not-detailed-diagramming">ADR-009</a>), the conclusion was that Archify is excellent for executive views but does not scale to detailed diagrams with more than approximately 12 nodes.</p>
+<p>Tmura solves that by separating the tool of record per diagram type.</p>
+<h2>Tool of record per diagram type</h2>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>Tool</th>
+<th>Location</th>
+<th>Node limit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Executive view</td>
+<td>Archify</td>
+<td><code>src/archify/</code></td>
+<td>8–12 nodes</td>
+</tr>
+<tr>
+<td>Detailed view</td>
+<td>draw.io</td>
+<td><code>src/drawio-sources/</code></td>
+<td>none</td>
+</tr>
+<tr>
+<td>Presentation layer</td>
+<td>Custom HTML</td>
+<td><code>docs/diagrams/</code></td>
+<td>none</td>
+</tr>
+</tbody></table>
+<p>The three deliverables represent the same system at different levels of detail. They are not competing views; they are layers.</p>
+<h2>Supported formats</h2>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Extension</th>
+<th>Generated from</th>
+<th>Import target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTML (Archify)</td>
+<td><code>.html</code></td>
+<td><code>src/archify/*.json</code></td>
+<td>Browser</td>
+</tr>
+<tr>
+<td>draw.io</td>
+<td><code>.drawio</code></td>
+<td><code>src/drawio-sources/*.json</code></td>
+<td><a href="https://app.diagrams.net">app.diagrams.net</a></td>
+</tr>
+<tr>
+<td>HTML (custom)</td>
+<td><code>.html</code></td>
+<td>Hand-authored</td>
+<td>Browser</td>
+</tr>
+</tbody></table>
+<h2>Repository structure</h2>
+<pre><code>tmura/
+├── .github/workflows/       # CI: validation and export
+├── src/
+│   ├── archify/             # Executive views (validated against Archify schema)
+│   │   ├── architecture/
+│   │   └── data-flow/
+│   ├── drawio-sources/      # Detailed views (not validated by Archify)
+│   ├── converters/          # One converter per target format
+│   └── utils/               # Validator (delegates to Archify CLI)
+├── vendor/
+│   └── archify/             # Official Archify (git submodule, pinned)
+├── docs/
+│   ├── DECISIONS.md         # Architecture Decision Records
+│   └── diagrams/
+│       ├── authentication-platform.html    # Custom branded HTML
+│       └── archify/                        # Archify-generated HTMLs
+├── exports/                 # Generated files (gitignored)
+└── package.json
+</code></pre>
+<h2>Commands</h2>
+<pre><code class="language-bash">npm install                       # Install dependencies
+npm run validate                  # Validate all Archify JSONs against the official schema
+npm run export:drawio             # Generate draw.io files from src/archify + src/drawio-sources
+npm run export:mermaid            # Generate Mermaid files from src/archify
+npm run export:all                # Run all exporters
+</code></pre>
+<h2>Workflow</h2>
+<ol>
+<li><strong>Author the source JSON.</strong><ul>
+<li>Executive views: <code>src/archify/&lt;type&gt;/&lt;name&gt;.json</code> (must validate).</li>
+<li>Detailed views: <code>src/drawio-sources/&lt;name&gt;.json</code> (no validation).</li>
+</ul>
+</li>
+<li><strong>Validate</strong> the Archify sources: <code>npm run validate</code>.</li>
+<li><strong>Generate exports:</strong> <code>npm run export:all</code>.</li>
+<li><strong>Find outputs</strong> in <code>exports/&lt;format&gt;/</code>.</li>
+<li><strong>For Archify diagrams, render the final HTML:</strong><pre><code class="language-bash">node vendor/archify/archify/bin/archify.mjs finalize &lt;type&gt; &lt;input.json&gt; &lt;output.html&gt; \
+  --quality standard --candidate-sha256 &lt;HASH&gt; --json
+</code></pre>
+The hash comes from <code>npm run validate</code>.</li>
+</ol>
+<h2>Context: the Imut project</h2>
+<p>Tmura exists to serve <a href="https://github.com/NepoPetro">Imut</a>. The current data lineage diagram covers the Imut authentication platform across seven layers:</p>
+<ol>
+<li><strong>Origin</strong> — end user, frontend</li>
+<li><strong>Processing</strong> — BFF, API Node.js</li>
+<li><strong>Security</strong> — bcrypt, JWT, auth middleware, rate limiting, session automata</li>
+<li><strong>Storage</strong> — PgBouncer, PostgreSQL, users, audit_logs, chained audit hash</li>
+<li><strong>Failures</strong> — Dead Letter Queue</li>
+<li><strong>Observability</strong> — Prometheus, Grafana, dashboards</li>
+<li><strong>Events</strong> — Dead Letter Topic, Slack notifications, compliance system</li>
+</ol>
+<p>The diagram also records one rejected case study from Imut&#39;s ADR-008: a Navier-Stokes-based key derivation function that was explored but not adopted for production.</p>
+<h2>Architecture decisions</h2>
+<p>All engineering decisions are documented in <a href="docs/DECISIONS.md">docs/DECISIONS.md</a>:</p>
+<ul>
+<li><strong>ADR-001</strong> to <strong>ADR-003</strong>: source of truth, submodule governance, pinned commit.</li>
+<li><strong>ADR-004</strong> and <strong>ADR-008</strong>: conversion contract (structural, not visual).</li>
+<li><strong>ADR-005</strong> and <strong>ADR-006</strong>: verifiable formats, fail-fast validation.</li>
+<li><strong>ADR-007</strong>: hybrid diagram ecosystem scope.</li>
+<li><strong>ADR-009</strong>: Archify scope — executive views only. Includes DAFO analysis.</li>
+</ul>
+<h2>Updating the Archify submodule</h2>
+<p>The submodule is pinned to a specific commit for reproducible builds.</p>
+<pre><code class="language-bash">git submodule update --remote vendor/archify
+git add vendor/archify
+git commit -m &quot;Update Archify submodule&quot;
+</code></pre>
+<h2>License</h2>
+<p>MIT</p>
+
+  </main>
+</body>
+</html>
