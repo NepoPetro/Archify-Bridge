@@ -1,0 +1,98 @@
+import { readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
+import { basename, dirname, extname, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { marked } from 'marked';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const DOCS_DIR = join(ROOT, 'docs');
+const ADR_SOURCE_DIR = join(DOCS_DIR, 'adrs');
+const ADR_OUTPUT_DIR = join(DOCS_DIR, 'adrs-html');
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+const renderer = new marked.Renderer();
+const defaultCodeRenderer = renderer.code.bind(renderer);
+
+renderer.code = (code) => {
+  if (code.lang?.trim().split(/\s+/, 1)[0] === 'mermaid') {
+    return `<pre class="mermaid">${escapeHtml(code.text)}</pre>\n`;
+  }
+  return defaultCodeRenderer(code);
+};
+
+function renderMarkdown(sourcePath, outputPath) {
+  const markdown = readFileSync(sourcePath, 'utf8');
+  const body = marked.parse(markdown, { renderer });
+  const title = escapeHtml(basename(sourcePath, extname(sourcePath)));
+  const basePath = relative(dirname(outputPath), ROOT).replaceAll('\\', '/');
+  const baseHref = basePath ? `${basePath}/` : './';
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="${baseHref}">
+  <title>Tmura — ${title}</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+${body}
+  </main>
+</body>
+</html>
+`;
+
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, html, 'utf8');
+  console.log(`Generated ${outputPath}`);
+}
+
+const jobs = [
+  {
+    source: join(DOCS_DIR, 'DECISIONS.md'),
+    target: join(DOCS_DIR, 'DECISIONS.html')
+  },
+  ...readdirSync(ADR_SOURCE_DIR)
+    .filter((file) => extname(file).toLowerCase() === '.md')
+    .sort((a, b) => a.localeCompare(b))
+    .map((file) => ({
+      source: join(ADR_SOURCE_DIR, file),
+      target: join(ADR_OUTPUT_DIR, `${basename(file, extname(file))}.html`)
+    }))
+];
+
+mkdirSync(ADR_OUTPUT_DIR, { recursive: true });
+for (const job of jobs) renderMarkdown(job.source, job.target);

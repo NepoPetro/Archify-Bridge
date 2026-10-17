@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="../">
+  <title>Tmura — DECISIONS</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+<h1>Engineering Decisions</h1>
+<p>This directory records the architectural decisions behind Tmura. Each decision follows the ADR (Architecture Decision Record) format, with its own file for traceability.</p>
+<h2>Index</h2>
+<table>
+<thead>
+<tr>
+<th>ADR</th>
+<th>Title</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="adrs/adr-001-archify-json-ir-is-the-single-source-of-truth.md">ADR-001</a></td>
+<td>Archify JSON IR is the single source of truth</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-002-use-the-official-archify-cli-via-submodule.md">ADR-002</a></td>
+<td>Use the official Archify CLI via submodule</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-003-pin-the-submodule-to-an-exact-commit.md">ADR-003</a></td>
+<td>Pin the submodule to an exact commit</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-004-preserve-topology-and-explicit-layout.md">ADR-004</a></td>
+<td>Preserve topology and explicit layout</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-005-only-export-formats-that-can-be-verified.md">ADR-005</a></td>
+<td>Only export formats that can be verified</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-006-the-validator-fails-loudly.md">ADR-006</a></td>
+<td>The validator fails loudly</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-007-hybrid-diagram-ecosystem.md">ADR-007</a></td>
+<td>Hybrid diagram ecosystem scope</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-008-the-conversion-contract-is-structural.md">ADR-008</a></td>
+<td>The conversion contract is structural, not visual</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td><a href="adrs/adr-009-archify-scope-executive-views.md">ADR-009</a></td>
+<td>Archify scope: executive views, not detailed diagramming</td>
+<td>Accepted</td>
+</tr>
+</tbody></table>
+<h2>Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Driver</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JSON IR as single source of truth</td>
+<td>Avoid drift</td>
+</tr>
+<tr>
+<td>Official CLI via submodule</td>
+<td>Single definition of correctness</td>
+</tr>
+<tr>
+<td>Pinned commit</td>
+<td>Reproducibility and audit</td>
+</tr>
+<tr>
+<td>Preserve topology and layout; accept visual divergence</td>
+<td>Respect author intent, avoid re-implementation</td>
+</tr>
+<tr>
+<td>Only verifiable formats</td>
+<td>Technical honesty</td>
+</tr>
+<tr>
+<td>Fail loudly</td>
+<td>Pipeline integrity</td>
+</tr>
+<tr>
+<td>Hybrid diagram ecosystem</td>
+<td>Scope discipline</td>
+</tr>
+<tr>
+<td>Structural conversion contract</td>
+<td>Achievable guarantees</td>
+</tr>
+<tr>
+<td>Archify for executive views only</td>
+<td>Tool scope and technical honesty</td>
+</tr>
+</tbody></table>
+
+  </main>
+</body>
+</html>
