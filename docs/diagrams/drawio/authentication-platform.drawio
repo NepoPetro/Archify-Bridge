@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="archify-bridge" type="device">
+  <diagram name="Authentication Platform - Data Lineage" id="archify-diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" value="User
+origin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" value="Frontend (React)
+client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="320" y="100" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bff" value="BFF
+ADR-001 backend for frontend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="api_node" value="API Node.js
+request processing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="320" y="280" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bcrypt" value="Password Hashing (bcrypt)
+salt, slow by design" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="500" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jwt" value="JWT
+short-lived signed tokens" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="500" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="middleware" value="Auth Middleware
+validates every request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="500" y="500" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rate_limit" value="Rate Limiting
+lock after N failed attempts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="720" y="500" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="automatas" value="Session Automata
+formal state model" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="940" y="500" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sha256_chain" value="SHA-256 Chain
+chained audit hashes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="720" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ecdsa" value="ECDSA secp256k1
+digital transaction signature" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="720" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="aes_gcm" value="AES-256-GCM
+authenticated encryption" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="520" y="720" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kms_hsm" value="KMS / HSM
+key custody (planned)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="740" y="720" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="digital_twin" value="Ephemeral Digital Twin
+ADR-006 per-session monitor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="960" y="720" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="navier" value="Navier-Stokes KDF
+experimental, not in production" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="900" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="pgbouncer" value="PgBouncer
+ADR-003 connection pool" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1080" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" value="PostgreSQL
+primary database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="1080" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="users_table" value="users
+identity records" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1040" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_logs" value="audit_logs
+append-only events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1140" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_chain" value="Chained Audit Hash
+verify endpoint /audit/verify" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="780" y="1090" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dlq" value="DLQ
+ADR-004 dead letter queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="1080" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="prometheus" value="Prometheus
+metrics collection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1380" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="grafana" value="Grafana
+dashboards" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1380" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dashboards" value="Dashboards
+operational views" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="520" y="1380" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dlt" value="DLT
+observability event topic" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1600" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="slack" value="Slack Notifications
+alerting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1560" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="compliance" value="Compliance System
+legal and regulatory" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1660" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="legal" value="Legal Framework
+Ley 25.326 / GDPR / Budapest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="1600" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-0" value="sends data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;" edge="1" parent="1" source="user" target="frontend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-1" value="auth request" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="frontend" target="bff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-2" value="validates request" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="bff" target="api_node">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-3" value="generates hash" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="api_node" target="bcrypt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-4" value="issues token" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="api_node" target="jwt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-5" value="guarded by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="api_node" target="middleware">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-6" value="enforces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="middleware" target="rate_limit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-7" value="session state" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="rate_limit" target="automatas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-8" value="audit event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="bcrypt" target="sha256_chain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-9" value="signs transaction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="sha256_chain" target="ecdsa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-10" value="encrypts record" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="ecdsa" target="aes_gcm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-11" value="key custody" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="aes_gcm" target="kms_hsm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-12" value="monitors session" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="ecdsa" target="digital_twin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-13" value="proposed KDF (rejected)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="1" source="sha256_chain" target="navier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-14" value="queries" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="api_node" target="pgbouncer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-15" value="pooled connection" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="pgbouncer" target="postgres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-16" value="reads identity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="postgres" target="users_table">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-17" value="writes audit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="postgres" target="audit_logs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-18" value="hash chained" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="audit_logs" target="audit_chain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-19" value="processing failure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="1" source="api_node" target="dlq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-20" value="integrity alert" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="1" source="audit_chain" target="dlq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-21" value="collects metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="1" source="api_node" target="prometheus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-22" value="metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="prometheus" target="grafana">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-23" value="renders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="grafana" target="dashboards">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-24" value="escalates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="dlq" target="dlt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-25" value="notifies" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="dlt" target="slack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-26" value="reports" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="dlt" target="compliance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="connection-27" value="legal evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;" edge="1" parent="1" source="audit_chain" target="legal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Tmura - Archify Bridge",
+    "subtitle": "Bridge between Archify JSON IR and draw.io. Generates executive views (Archify) and detailed data lineage diagrams (draw.io) for the Imut platform. Includes DAFO analysis of Archify as a diagramming tool.",
+    "output": "tmura-project.html",
+    "visual_preset": "signal-flow",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [1240, 1040]
+  },
+  "components": [
+    { "id": "archify_json", "type": "external", "label": "Archify JSON", "sublabel": "src/archify/", "pos": [40, 310], "size": [200, 72], "tag": "source" },
+    { "id": "drawio_json", "type": "external", "label": "draw.io Source JSON", "sublabel": "src/drawio-sources/", "pos": [40, 510], "size": [200, 72], "tag": "source" },
+
+    { "id": "github_actions", "type": "cloud", "label": "GitHub Actions", "sublabel": "validate + export workflows", "pos": [330, 400], "size": [220, 82], "tag": "automation" },
+    { "id": "archify_validator", "type": "security", "label": "Archify CLI Validator", "sublabel": "schema, layout, and quality checks", "pos": [620, 90], "size": [220, 82], "tag": "quality gate" },
+    { "id": "archify_renderer", "type": "backend", "label": "Archify Renderer", "sublabel": "executive diagram views", "pos": [620, 280], "size": [210, 82], "tag": "renderer" },
+    { "id": "to_drawio", "type": "backend", "label": "to-drawio.js", "sublabel": "architecture JSON to draw.io XML", "pos": [620, 490], "size": [210, 82], "tag": "converter" },
+    { "id": "to_mermaid", "type": "backend", "label": "to-mermaid.js", "sublabel": "Archify JSON to Mermaid", "pos": [620, 700], "size": [210, 82], "tag": "converter" },
+
+    { "id": "archify_html", "type": "frontend", "label": "Archify HTML", "sublabel": "executive views", "pos": [910, 90], "size": [260, 72], "tag": "output" },
+    { "id": "drawio_xml", "type": "external", "label": "draw.io XML", "sublabel": "detailed editable views", "pos": [910, 280], "size": [260, 72], "tag": "output" },
+    { "id": "custom_html", "type": "frontend", "label": "Custom HTML", "sublabel": "presentation-ready diagrams", "pos": [910, 490], "size": [260, 72], "tag": "output" },
+    { "id": "mermaid_output", "type": "external", "label": "Mermaid Source", "sublabel": "text-based diagram output", "pos": [910, 700], "size": [260, 72], "tag": "output" },
+
+    { "id": "project_docs", "type": "external", "label": "Project Documentation", "sublabel": "ADR-001 through ADR-009 · README · wiki", "pos": [330, 830], "size": [260, 86], "tag": "governance" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Diagram Sources", "wraps": ["archify_json", "drawio_json"], "pad": 28 },
+    { "kind": "region", "label": "Automation & Conversion", "wraps": ["github_actions", "archify_validator", "archify_renderer", "to_drawio", "to_mermaid"], "pad": 30 },
+    { "kind": "region", "label": "Diagram Deliverables", "wraps": ["archify_html", "drawio_xml", "custom_html", "mermaid_output"], "pad": 28 },
+    { "kind": "region", "label": "Governance & Guidance", "wraps": ["project_docs"], "pad": 24 }
+  ],
+  "connections": [
+    { "from": "archify_json", "to": "github_actions", "label": "architecture source", "variant": "emphasis" },
+    { "from": "drawio_json", "to": "github_actions", "label": "detailed lineage source", "variant": "emphasis" },
+    { "from": "github_actions", "to": "archify_validator", "label": "validate workflow", "variant": "security" },
+    { "from": "github_actions", "to": "archify_renderer", "label": "export workflow", "variant": "dashed" },
+    { "from": "github_actions", "to": "to_drawio", "label": "export workflow", "variant": "dashed" },
+    { "from": "github_actions", "to": "to_mermaid", "label": "export workflow", "variant": "dashed" },
+
+    { "from": "archify_renderer", "to": "archify_html", "label": "executive HTML", "variant": "emphasis" },
+    { "from": "to_drawio", "to": "drawio_xml", "label": "editable XML", "variant": "emphasis" },
+    { "from": "drawio_xml", "to": "custom_html", "label": "presentation rendering", "route": "orthogonal-v" },
+    { "from": "to_mermaid", "to": "mermaid_output", "label": "Mermaid source", "variant": "emphasis" },
+
+    { "from": "project_docs", "to": "github_actions", "label": "documents CI workflows", "variant": "dashed" }
+  ]
+}
