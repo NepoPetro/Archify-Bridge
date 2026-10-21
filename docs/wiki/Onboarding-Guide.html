@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="../">
+  <title>Tmura — Onboarding-Guide</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+<p>﻿# Onboarding Guide</p>
+<p>This guide explains how to set up the Tmura repository locally.</p>
+<h2>Prerequisites</h2>
+<ol>
+<li><strong>Node.js</strong> (v20 or higher)</li>
+<li><strong>Git</strong> (with submodule support)</li>
+<li><strong>Python</strong> (for Livemark static site generation)</li>
+<li><strong>Mathematica / Wolfram Engine</strong> (for evidence and PoCs)</li>
+</ol>
+<h2>Initial Setup</h2>
+<p>Clone the repository including the Archify submodule:</p>
+<p>git clone --recursive <a href="https://github.com/NepoPetro/Tmura.git">https://github.com/NepoPetro/Tmura.git</a>
+cd Tmura</p>
+<p>Install the Node dependencies:</p>
+<p>npm install</p>
+<h2>Running the Pipeline</h2>
+<p>Validate all Archify JSON files against the official schema:</p>
+<p>npm run validate</p>
+<p>Generate draw.io files from the JSON sources:</p>
+<p>npm run export:drawio</p>
+<p>Render Archify diagrams to HTML (requires the candidate hash from the validate step):</p>
+<p>node vendor/archify/archify/bin/archify.mjs finalize <type> &lt;input.json&gt; &lt;output.html&gt; --quality standard --candidate-sha256 <HASH> --json</p>
+<h2>Building the Documentation Site</h2>
+<p>To regenerate the static HTML files for the ADRs and README:</p>
+<p>python -m livemark build README.md --target docs/README.html
+python -m livemark build docs/adrs -o docs/adrs-html</p>
+
+  </main>
+</body>
+</html>

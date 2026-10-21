@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <base href="../">
+  <title>Tmura — Home</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', securityLevel: 'strict' });
+  </script>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5edf8; line-height: 1.7; }
+    main { box-sizing: border-box; width: min(100% - 2rem, 960px); margin: 3rem auto; padding: clamp(1.25rem, 4vw, 3rem); background: #111c2e; border: 1px solid #26364e; border-radius: 16px; }
+    h1, h2, h3, h4 { color: #f7fbff; line-height: 1.25; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    a { color: #7dd3fc; }
+    a:hover { color: #bae6fd; }
+    img { max-width: 100%; height: auto; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre:not(.mermaid) { overflow-x: auto; padding: 1rem; background: #08101d; border: 1px solid #26364e; border-radius: 10px; }
+    :not(pre) > code { padding: .15em .35em; background: #1b2a40; border-radius: 5px; }
+    blockquote { margin-inline: 0; padding: .25rem 1rem; border-left: 3px solid #38bdf8; color: #b9c9dc; }
+    table { display: block; overflow-x: auto; border-collapse: collapse; }
+    th, td { padding: .55rem .8rem; border: 1px solid #33445c; text-align: left; }
+    th { background: #1b2a40; }
+    hr { border: 0; border-top: 1px solid #33445c; margin: 2rem 0; }
+    .mermaid { overflow-x: auto; padding: 1rem; text-align: center; background: #0d1727; border: 1px solid #26364e; border-radius: 10px; }
+    @media (max-width: 600px) { main { width: 100%; margin: 0; border-radius: 0; border-inline: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+<p>﻿# Welcome to the Tmura Wiki</p>
+<p>Tmura (Hebrew for &quot;bridge&quot;) is a satellite project of Imut (1DFlfRMH), a data governance and digital rights platform.</p>
+<p>This repository was created to solve a specific engineering challenge: producing reliable, verifiable, and aesthetically professional data lineage diagrams without compromising architectural density.</p>
+<h2>Purpose of this Wiki</h2>
+<p>This Wiki provides the conceptual and operational context that complements the technical codebase and the Architecture Decision Records (ADRs). Here you will find:</p>
+<ul>
+<li><strong>Glossary:</strong> Definitions of the specific terminology used across the project.</li>
+<li><strong>Architecture Context:</strong> The business and governance reasons behind Tmura.</li>
+<li><strong>Onboarding Guide:</strong> How to set up the environment and run the pipeline.</li>
+<li><strong>Evidence Standard:</strong> How Mathematica is used for formal proofs and PoCs.</li>
+</ul>
+<h2>Project Navigation</h2>
+<ul>
+<li><strong>Interactive Diagram:</strong> <a href="https://nepopetro.github.io/Tmura/">GitHub Pages</a></li>
+<li><strong>Architecture Decisions:</strong> <a href="DECISIONS.html">ADRs</a></li>
+<li><strong>Project Roadmap:</strong> <a href="https://github.com/NepoPetro/Tmura/projects">GitHub Projects</a></li>
+</ul>
+
+  </main>
+</body>
+</html>
