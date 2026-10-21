@@ -7,6 +7,17 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS_DIR = join(ROOT, 'docs');
 const ADR_SOURCE_DIR = join(DOCS_DIR, 'adrs');
 const ADR_OUTPUT_DIR = join(DOCS_DIR, 'adrs-html');
+const WIKI_DIR = join(DOCS_DIR, 'wiki');
+
+function listMarkdownFiles(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = join(directory, entry.name);
+    if (entry.isDirectory()) return listMarkdownFiles(entryPath);
+    return entry.isFile() && extname(entry.name).toLowerCase() === '.md'
+      ? [entryPath]
+      : [];
+  });
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -31,7 +42,7 @@ function renderMarkdown(sourcePath, outputPath) {
   const markdown = readFileSync(sourcePath, 'utf8');
   const body = marked.parse(markdown, { renderer });
   const title = escapeHtml(basename(sourcePath, extname(sourcePath)));
-  const basePath = relative(dirname(outputPath), ROOT).replaceAll('\\', '/');
+  const basePath = relative(dirname(outputPath), DOCS_DIR).replaceAll('\\', '/');
   const baseHref = basePath ? `${basePath}/` : './';
 
   const html = `<!doctype html>
@@ -91,6 +102,12 @@ const jobs = [
     .map((file) => ({
       source: join(ADR_SOURCE_DIR, file),
       target: join(ADR_OUTPUT_DIR, `${basename(file, extname(file))}.html`)
+    })),
+  ...listMarkdownFiles(WIKI_DIR)
+    .sort((a, b) => a.localeCompare(b))
+    .map((file) => ({
+      source: file,
+      target: join(dirname(file), `${basename(file, extname(file))}.html`)
     }))
 ];
 
